@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#059669" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>algos-lab · visual algorithms</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <span class="dot"></span><strong>algos-lab</strong>
+        <span class="sub">algorithms, visual</span>
+      </div>
+      <nav>
+        <a href="#sort">sorting</a>
+        <a href="#path">pathfinding</a>
+        <a href="#bin">binary search</a>
+        <a href="#graph">BFS / DFS</a>
+        <a href="#hash">hash table</a>
+        <a href="#nq">N-Queens</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- 1. SORTING RACE ------------------------------------------------- -->
+      <section class="demo" id="sort">
+        <h2>1. Sorting race</h2>
+        <p class="cap">Same shuffled array, four algorithms, side by side. Bar height = value, color = state.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-sort" width="600" height="320"></canvas></div>
+          <div class="ctrls">
+            <label>n <span class="mono" id="sort-nv">40</span>
+              <input id="sort-n" type="range" min="10" max="120" value="40"/></label>
+            <label>speed <span class="mono" id="sort-sv">10</span>
+              <input id="sort-s" type="range" min="1" max="40" value="10"/></label>
+            <div class="row" style="gap:0.4rem; display:flex">
+              <button id="sort-go" class="btn">race</button>
+              <button id="sort-shuffle" class="btn">shuffle</button>
+            </div>
+            <div class="readout"><span style="color:#16A34A">bubble</span><strong id="sort-c0" class="mono">0</strong></div>
+            <div class="readout"><span style="color:#2563EB">insertion</span><strong id="sort-c1" class="mono">0</strong></div>
+            <div class="readout"><span style="color:#7C3AED">quick</span><strong id="sort-c2" class="mono">0</strong></div>
+            <div class="readout"><span style="color:#DC2626">merge</span><strong id="sort-c3" class="mono">0</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. PATHFINDING ------------------------------------------------- -->
+      <section class="demo" id="path">
+        <h2>2. Pathfinding</h2>
+        <p class="cap">Click to draw walls. Drag the start (green) and goal (red). Compare BFS, Dijkstra, A*.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-path" width="600" height="380"></canvas></div>
+          <div class="ctrls">
+            <label>algorithm
+              <select id="path-alg">
+                <option value="bfs">BFS</option>
+                <option value="dij">Dijkstra</option>
+                <option value="astar" selected>A* (Manhattan)</option>
+              </select>
+            </label>
+            <button id="path-run"   class="btn">run</button>
+            <button id="path-clear" class="btn">clear walls</button>
+            <button id="path-maze"  class="btn">random maze</button>
+            <div class="readout"><span>visited</span><strong id="path-v" class="mono">—</strong></div>
+            <div class="readout"><span>path length</span><strong id="path-l" class="mono">—</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. BINARY SEARCH ----------------------------------------------- -->
+      <section class="demo" id="bin">
+        <h2>3. Binary search</h2>
+        <p class="cap">$O(\log n)$. Each step halves the window. Pointers: lo, mid, hi.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-bin" width="600" height="220"></canvas></div>
+          <div class="ctrls">
+            <label>n <span class="mono" id="bin-nv">32</span>
+              <input id="bin-n" type="range" min="8" max="80" value="32"/></label>
+            <label>target <span class="mono" id="bin-tv">17</span>
+              <input id="bin-t" type="range" min="1" max="100" value="17"/></label>
+            <button id="bin-go" class="btn">search</button>
+            <div class="readout"><span>steps</span><strong id="bin-s" class="mono">—</strong></div>
+            <div class="readout"><span>found at</span><strong id="bin-f" class="mono">—</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. BFS / DFS --------------------------------------------------- -->
+      <section class="demo" id="graph">
+        <h2>4. Graph traversal — BFS vs DFS</h2>
+        <p class="cap">Click any node to set start. BFS visits by level; DFS dives.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-gr" width="600" height="360"></canvas></div>
+          <div class="ctrls">
+            <label>order
+              <select id="gr-alg">
+                <option value="bfs">BFS</option>
+                <option value="dfs">DFS</option>
+              </select>
+            </label>
+            <button id="gr-run" class="btn">replay</button>
+            <div class="readout"><span>visit order</span><strong id="gr-ord" class="mono">—</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. HASH TABLE -------------------------------------------------- -->
+      <section class="demo" id="hash">
+        <h2>5. Hash table</h2>
+        <p class="cap">Type keys. Each goes through $h(k) = \sum c_i \cdot 31^{n-1-i} \mod m$. Watch collisions form chains (or probe).</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-h" width="600" height="320"></canvas></div>
+          <div class="ctrls">
+            <label>key
+              <input id="h-key" type="text" placeholder="alice"/></label>
+            <div class="row" style="gap:0.4rem; display:flex">
+              <button id="h-add" class="btn">insert</button>
+              <button id="h-clr" class="btn">clear</button>
+            </div>
+            <label>buckets <span class="mono" id="h-mv">11</span>
+              <input id="h-m" type="range" min="5" max="23" value="11"/></label>
+            <label>collision policy
+              <select id="h-pol">
+                <option value="chain" selected>chaining</option>
+                <option value="lin">linear probing</option>
+              </select>
+            </label>
+            <div class="readout"><span>load factor</span><strong id="h-lf" class="mono">0.00</strong></div>
+            <div class="readout"><span>worst chain</span><strong id="h-wc" class="mono">0</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. N-QUEENS ---------------------------------------------------- -->
+      <section class="demo" id="nq">
+        <h2>6. Backtracking — N-Queens</h2>
+        <p class="cap">Place $n$ queens so none attack. The search tree is huge; backtracking prunes the impossible branches early.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-q" width="600" height="380"></canvas></div>
+          <div class="ctrls">
+            <label>n <span class="mono" id="q-nv">8</span>
+              <input id="q-n" type="range" min="4" max="12" value="8"/></label>
+            <label>speed <span class="mono" id="q-sv">12</span>
+              <input id="q-s" type="range" min="1" max="40" value="12"/></label>
+            <button id="q-go" class="btn">solve</button>
+            <div class="readout"><span>tries</span><strong id="q-tr" class="mono">0</strong></div>
+            <div class="readout"><span>solutions found</span><strong id="q-fn" class="mono">0</strong></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>algos-lab — Andrea Montana · IE BCSAI</span>
+      <span class="more">
+        <a href="https://github.com/andreaisabelmontana/stats-lab" target="_blank">stats-lab</a>
+        <a href="https://github.com/andreaisabelmontana/calc-lab"  target="_blank">calc-lab</a>
+        <a href="https://github.com/andreaisabelmontana/sql-lab"   target="_blank">sql-lab</a>
+        <a href="https://github.com/andreaisabelmontana/algos-lab" target="_blank">source</a>
+      </span>
+    </footer>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
