@@ -24,6 +24,9 @@
         <a href="#graph">BFS / DFS</a>
         <a href="#hash">hash table</a>
         <a href="#nq">N-Queens</a>
+        <a href="#fib">DP — fib</a>
+        <a href="#ks">knapsack</a>
+        <a href="#bigO">complexity</a>
       </nav>
     </header>
 
@@ -36,9 +39,9 @@
           <div class="canvas-wrap"><canvas id="cv-sort" width="600" height="320"></canvas></div>
           <div class="ctrls">
             <label>n <span class="mono" id="sort-nv">40</span>
-              <input id="sort-n" type="range" min="10" max="120" value="40"/></label>
+              <input id="sort-n" type="range" min="10" max="120" step="1" value="40"/></label>
             <label>speed <span class="mono" id="sort-sv">10</span>
-              <input id="sort-s" type="range" min="1" max="40" value="10"/></label>
+              <input id="sort-s" type="range" min="1" max="40" step="1" value="10"/></label>
             <div class="row" style="gap:0.4rem; display:flex">
               <button id="sort-go" class="btn">race</button>
               <button id="sort-shuffle" class="btn">shuffle</button>
@@ -77,14 +80,14 @@
       <!-- 3. BINARY SEARCH ----------------------------------------------- -->
       <section class="demo" id="bin">
         <h2>3. Binary search</h2>
-        <p class="cap">$O(\log n)$. Each step halves the window. Pointers: lo, mid, hi.</p>
+        <p class="cap">O(log n). Each step halves the window. Pointers: lo, mid, hi.</p>
         <div class="row">
           <div class="canvas-wrap"><canvas id="cv-bin" width="600" height="220"></canvas></div>
           <div class="ctrls">
             <label>n <span class="mono" id="bin-nv">32</span>
-              <input id="bin-n" type="range" min="8" max="80" value="32"/></label>
+              <input id="bin-n" type="range" min="8" max="80" step="1" value="32"/></label>
             <label>target <span class="mono" id="bin-tv">17</span>
-              <input id="bin-t" type="range" min="1" max="100" value="17"/></label>
+              <input id="bin-t" type="range" min="1" max="100" step="1" value="17"/></label>
             <button id="bin-go" class="btn">search</button>
             <div class="readout"><span>steps</span><strong id="bin-s" class="mono">—</strong></div>
             <div class="readout"><span>found at</span><strong id="bin-f" class="mono">—</strong></div>
@@ -114,7 +117,7 @@
       <!-- 5. HASH TABLE -------------------------------------------------- -->
       <section class="demo" id="hash">
         <h2>5. Hash table</h2>
-        <p class="cap">Type keys. Each goes through $h(k) = \sum c_i \cdot 31^{n-1-i} \mod m$. Watch collisions form chains (or probe).</p>
+        <p class="cap">Type a key. Hash with `h = (h*31 + char) mod m`. Watch collisions chain or probe.</p>
         <div class="row">
           <div class="canvas-wrap"><canvas id="cv-h" width="600" height="320"></canvas></div>
           <div class="ctrls">
@@ -125,7 +128,7 @@
               <button id="h-clr" class="btn">clear</button>
             </div>
             <label>buckets <span class="mono" id="h-mv">11</span>
-              <input id="h-m" type="range" min="5" max="23" value="11"/></label>
+              <input id="h-m" type="range" min="5" max="23" step="1" value="11"/></label>
             <label>collision policy
               <select id="h-pol">
                 <option value="chain" selected>chaining</option>
@@ -141,17 +144,75 @@
       <!-- 6. N-QUEENS ---------------------------------------------------- -->
       <section class="demo" id="nq">
         <h2>6. Backtracking — N-Queens</h2>
-        <p class="cap">Place $n$ queens so none attack. The search tree is huge; backtracking prunes the impossible branches early.</p>
+        <p class="cap">Place `n` queens; none attack. Red cells flash on conflict before the algorithm prunes.</p>
         <div class="row">
           <div class="canvas-wrap"><canvas id="cv-q" width="600" height="380"></canvas></div>
           <div class="ctrls">
             <label>n <span class="mono" id="q-nv">8</span>
-              <input id="q-n" type="range" min="4" max="12" value="8"/></label>
+              <input id="q-n" type="range" min="4" max="12" step="1" value="8"/></label>
             <label>speed <span class="mono" id="q-sv">12</span>
-              <input id="q-s" type="range" min="1" max="40" value="12"/></label>
+              <input id="q-s" type="range" min="1" max="40" step="1" value="12"/></label>
             <button id="q-go" class="btn">solve</button>
             <div class="readout"><span>tries</span><strong id="q-tr" class="mono">0</strong></div>
             <div class="readout"><span>solutions found</span><strong id="q-fn" class="mono">0</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. FIBONACCI MEMO --------------------------------------------- -->
+      <section class="demo" id="fib">
+        <h2>7. DP — Fibonacci recursion tree</h2>
+        <p class="cap">Naive recursion is exponential. Memoization turns repeated subproblems (red) into table lookups.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-fib" width="600" height="360"></canvas></div>
+          <div class="ctrls">
+            <label>n <span class="mono" id="fib-nv">7</span>
+              <input id="fib-n" type="range" min="2" max="14" step="1" value="7"/></label>
+            <label>mode
+              <select id="fib-mode">
+                <option value="naive" selected>naive recursion</option>
+                <option value="memo">with memoization</option>
+              </select>
+            </label>
+            <div class="readout"><span>calls</span><strong id="fib-c" class="mono big">—</strong></div>
+            <div class="readout"><span>result</span><strong id="fib-r" class="mono">—</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. KNAPSACK --------------------------------------------------- -->
+      <section class="demo" id="ks">
+        <h2>8. 0/1 Knapsack DP table</h2>
+        <p class="cap">Each cell `dp[i][w]` is the best value using items `0..i` with capacity `w`. Trace back to recover the chosen items.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-ks" width="600" height="380"></canvas></div>
+          <div class="ctrls">
+            <label>capacity <span class="mono" id="ks-cv">10</span>
+              <input id="ks-c" type="range" min="4" max="20" step="1" value="10"/></label>
+            <button id="ks-reroll" class="btn">new items</button>
+            <div class="readout"><span>items chosen</span><strong id="ks-pick" class="mono">—</strong></div>
+            <div class="readout"><span>total value</span><strong id="ks-val" class="mono big">—</strong></div>
+            <div class="readout"><span>weight used</span><strong id="ks-w" class="mono">—</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. COMPLEXITY ------------------------------------------------- -->
+      <section class="demo" id="bigO">
+        <h2>9. Big-O comparison</h2>
+        <p class="cap">Same input size `n`, very different growth rates. Log y-axis toggle.</p>
+        <div class="row">
+          <div class="canvas-wrap"><canvas id="cv-bo" width="600" height="340"></canvas></div>
+          <div class="ctrls">
+            <label>max n <span class="mono" id="bo-nv">40</span>
+              <input id="bo-n" type="range" min="10" max="200" step="1" value="40"/></label>
+            <label class="check"><input id="bo-log" type="checkbox"/> log scale</label>
+            <div class="readout"><span style="color:#16A34A">O(1)</span><strong id="bo-c0" class="mono">—</strong></div>
+            <div class="readout"><span style="color:#06B6D4">O(log n)</span><strong id="bo-c1" class="mono">—</strong></div>
+            <div class="readout"><span style="color:#2563EB">O(n)</span><strong id="bo-c2" class="mono">—</strong></div>
+            <div class="readout"><span style="color:#7C3AED">O(n log n)</span><strong id="bo-c3" class="mono">—</strong></div>
+            <div class="readout"><span style="color:#F59E0B">O(n²)</span><strong id="bo-c4" class="mono">—</strong></div>
+            <div class="readout"><span style="color:#DC2626">O(2ⁿ)</span><strong id="bo-c5" class="mono">—</strong></div>
           </div>
         </div>
       </section>
