@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#059669" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>algos-lab · course outline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+    <style>
+      /* course.html — scoped extras, reusing the *-lab :root tokens */
+      .lede { color: var(--ink-soft); font-size: 0.92rem; max-width: 70ch; margin: 0 0 0.6rem; }
+      .lede + .lede { margin-top: 0.4rem; }
+
+      /* meta grid */
+      .meta {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.6rem; margin-top: 0.4rem;
+      }
+      .meta .cell {
+        border: 1px solid var(--rule); border-radius: 6px;
+        padding: 0.5rem 0.65rem; background: var(--bg);
+      }
+      .meta .k { color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; }
+      .meta .v { color: var(--ink); font-weight: 600; font-size: 0.86rem; margin-top: 0.15rem; }
+
+      /* objective / generic lists */
+      ul.clean { list-style: none; margin: 0.3rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+      ul.clean li { position: relative; padding-left: 1.1rem; color: var(--ink-soft); font-size: 0.88rem; }
+      ul.clean li::before {
+        content: ''; position: absolute; left: 0; top: 0.5em;
+        width: 7px; height: 7px; border-radius: 2px; background: var(--accent);
+      }
+
+      /* % bars */
+      .bars { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.3rem; }
+      .bar-row { display: grid; grid-template-columns: 150px 1fr 52px; align-items: center; gap: 0.6rem; font-size: 0.84rem; }
+      .bar-row .lbl { color: var(--ink-soft); font-weight: 500; }
+      .track { height: 10px; background: var(--rule); border-radius: 999px; overflow: hidden; }
+      .fill { height: 100%; background: var(--accent); border-radius: 999px; }
+      .fill.alt { background: var(--warn); }
+      .bar-row .pct { font-family: var(--font-mono); font-weight: 600; color: var(--ink); text-align: right; font-size: 0.82rem; }
+
+      .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      @media (max-width: 760px) { .split { grid-template-columns: 1fr; gap: 1rem; } }
+      .split h3, .module h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 0 0 0.5rem; font-weight: 700; }
+
+      /* module group header */
+      .module { margin-top: 1.4rem; }
+      .module:first-of-type { margin-top: 0.4rem; }
+      .module > .mhead {
+        display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap;
+        padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule-h);
+      }
+      .module .mnum {
+        font-family: var(--font-mono); font-weight: 600; font-size: 0.72rem;
+        color: var(--accent); background: var(--accent-soft);
+        padding: 0.15em 0.5em; border-radius: 4px;
+      }
+      .module .mtitle { font-size: 1rem; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+      .module .mmeta { color: var(--muted); font-size: 0.76rem; }
+
+      /* timeline of sessions */
+      .timeline { position: relative; margin: 0.4rem 0 0 0; padding-left: 1.4rem; }
+      .timeline::before {
+        content: ''; position: absolute; left: 6px; top: 0.4rem; bottom: 0.4rem;
+        width: 2px; background: var(--rule);
+      }
+      .sess { position: relative; padding: 0.7rem 0; border-bottom: 1px dotted var(--rule); }
+      .sess:last-child { border-bottom: 0; }
+      .sess::before {
+        content: ''; position: absolute; left: -1.4rem; top: 1.05rem;
+        width: 10px; height: 10px; border-radius: 999px;
+        background: var(--paper); border: 2px solid var(--accent);
+        transform: translateX(1px);
+      }
+      .sess.eval::before { background: var(--warn); border-color: var(--warn); }
+      .sess.practice::before { background: var(--paper); border-color: var(--ink-soft); }
+      .sess .shead { display: flex; align-items: baseline; gap: 0.55rem; flex-wrap: wrap; }
+      .sess .snum { font-family: var(--font-mono); font-size: 0.74rem; font-weight: 600; color: var(--muted); }
+      .sess .stitle { font-weight: 700; font-size: 0.9rem; color: var(--ink); }
+      .tag {
+        font-size: 0.66rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+        padding: 0.1em 0.45em; border-radius: 999px;
+      }
+      .tag.t-eval { background: rgba(245,158,11,0.14); color: #B45309; }
+      .tag.t-practice { background: var(--bg); color: var(--ink-soft); border: 1px solid var(--rule-h); }
+      .sess p { margin: 0.35rem 0 0; color: var(--ink-soft); font-size: 0.85rem; }
+      .sess ul.topics { list-style: none; margin: 0.4rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+      .sess ul.topics li { position: relative; padding-left: 0.95rem; font-size: 0.83rem; color: var(--ink-soft); }
+      .sess ul.topics li::before { content: '–'; position: absolute; left: 0; color: var(--muted); }
+      .reads { margin-top: 0.5rem; display: flex; gap: 0.4rem; flex-wrap: wrap; }
+      .reads .rtag {
+        font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-soft);
+        background: var(--bg); border: 1px solid var(--rule); border-radius: 4px;
+        padding: 0.12em 0.45em;
+      }
+      .demolink {
+        display: inline-block; margin-top: 0.5rem;
+        font-size: 0.76rem; font-weight: 600;
+        color: var(--accent); border: 1px solid var(--accent-soft);
+        background: var(--accent-soft); border-radius: 999px;
+        padding: 0.18em 0.6em;
+      }
+      .demolink:hover { border-bottom-color: transparent; filter: brightness(0.96); }
+      .demolink::before { content: '▸ '; }
+
+      .biblio { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.3rem; }
+      .biblio .book { border-left: 2px solid var(--accent); padding: 0.1rem 0 0.1rem 0.7rem; font-size: 0.86rem; }
+      .biblio .book .au { color: var(--ink); font-weight: 600; }
+      .biblio .book .ti { color: var(--ink-soft); font-style: italic; }
+      .biblio .book .isbn { font-family: var(--font-mono); color: var(--muted); font-size: 0.74rem; }
+
+      .legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.7rem; font-size: 0.74rem; color: var(--muted); }
+      .legend .li { display: flex; align-items: center; gap: 0.35rem; }
+      .legend .dot2 { width: 9px; height: 9px; border-radius: 999px; border: 2px solid var(--accent); }
+      .legend .dot2.e { background: var(--warn); border-color: var(--warn); }
+      .legend .dot2.p { border-color: var(--ink-soft); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <span class="dot"></span><strong>algos-lab</strong>
+        <span class="sub">course outline</span>
+      </div>
+      <nav>
+        <a href="./index.html">← interactive demos</a>
+        <a href="#overview">overview</a>
+        <a href="#objectives">objectives</a>
+        <a href="#method">methodology</a>
+        <a href="#program">program</a>
+        <a href="#biblio">bibliography</a>
+        <a href="./SYLLABUS.pdf" target="_blank">syllabus PDF</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- OVERVIEW + META ----------------------------------------------- -->
+      <section class="demo" id="overview">
+        <h2>Algorithms &amp; Data Structures</h2>
+        <p class="cap">Bachelor in Computer Science and Artificial Intelligence (BCSAI) · IE University · the tools for solving computational problems.</p>
+        <p class="lede">An algorithm is a well-defined computational procedure that takes some value, or set of values, as input and produces some value, or set of values, as output. This course builds a strong understanding of the data structures and algorithms available when solving a problem with a computer program — and of how to compare which one is best for the problem at hand.</p>
+        <p class="lede">To make these concepts stick, the course leans on practice and group work as the main learning and grading vehicles, just as in real software engineering.</p>
+        <div class="meta">
+          <div class="cell"><div class="k">Program</div><div class="v">BCSAI · SEP-2025</div></div>
+          <div class="cell"><div class="k">Course code</div><div class="v">ADS-CSAI.2.M.A</div></div>
+          <div class="cell"><div class="k">Area</div><div class="v">Computer Science</div></div>
+          <div class="cell"><div class="k">Sessions</div><div class="v">30</div></div>
+          <div class="cell"><div class="k">Credits</div><div class="v">6.0 ECTS</div></div>
+          <div class="cell"><div class="k">Year / course</div><div class="v">25-26 · Second</div></div>
+          <div class="cell"><div class="k">Semester</div><div class="v">1º</div></div>
+          <div class="cell"><div class="k">Category</div><div class="v">Compulsory</div></div>
+          <div class="cell"><div class="k">Language</div><div class="v">English</div></div>
+          <div class="cell"><div class="k">Professor</div><div class="v">Antonio Momblán Jiménez</div></div>
+          <div class="cell"><div class="k">Contact</div><div class="v">amomblan@faculty.ie.edu</div></div>
+          <div class="cell"><div class="k">Workload</div><div class="v">150 hours total</div></div>
+        </div>
+      </section>
+
+      <!-- LEARNING OBJECTIVES ------------------------------------------- -->
+      <section class="demo" id="objectives">
+        <h2>Learning objectives</h2>
+        <p class="cap">By the end of the course, students should be able to:</p>
+        <ul class="clean">
+          <li>Understand the basic concepts and fundamentals of algorithms and apply relevant discrete mathematics concepts (sets, series, sums) and the main problem-solving techniques.</li>
+          <li>Analyze algorithm complexity using Big-O notation to evaluate time and space efficiency.</li>
+          <li>Implement and apply fundamental data structures — arrays, lists, stacks, queues, trees, heaps, hash tables, and graphs — and understand how they help solve real-life problems.</li>
+          <li>Design and analyze classic algorithms using strategies such as divide-and-conquer, greedy, dynamic programming, and backtracking.</li>
+          <li>Master sorting and searching techniques, including Merge Sort, Quick Sort, and Binary Search.</li>
+          <li>Understand and implement key graph algorithms, such as BFS, DFS, Dijkstra's, and Bellman-Ford's.</li>
+          <li>Develop problem-solving skills by modeling, implementing, testing, and optimizing algorithmic solutions in code.</li>
+        </ul>
+      </section>
+
+      <!-- METHODOLOGY + ASSESSMENT -------------------------------------- -->
+      <section class="demo" id="method">
+        <h2>Methodology &amp; assessment</h2>
+        <p class="cap">A collaborative, active, applied method: theory sessions paired with practice sessions where students implement algorithms themselves. Three of the 30 sessions are Continuous Evaluation, held after modules 3, 6 and 7.</p>
+        <div class="split">
+          <div>
+            <h3>Learning activities (time weighting)</h3>
+            <div class="bars">
+              <div class="bar-row"><span class="lbl">Group work</span><span class="track"><span class="fill" style="width:36.7%"></span></span><span class="pct">36.7%</span></div>
+              <div class="bar-row"><span class="lbl">Individual studying</span><span class="track"><span class="fill" style="width:33.3%"></span></span><span class="pct">33.3%</span></div>
+              <div class="bar-row"><span class="lbl">Lectures</span><span class="track"><span class="fill" style="width:23.3%"></span></span><span class="pct">23.3%</span></div>
+              <div class="bar-row"><span class="lbl">Discussions</span><span class="track"><span class="fill" style="width:6.7%"></span></span><span class="pct">6.7%</span></div>
+            </div>
+            <p class="lede" style="margin-top:0.6rem; font-size:0.8rem;">Estimated 35h lectures · 10h discussions · 55h group work · 50h individual study = 150h.</p>
+          </div>
+          <div>
+            <h3>Final grade (evaluation criteria)</h3>
+            <div class="bars">
+              <div class="bar-row"><span class="lbl">Final exam</span><span class="track"><span class="fill alt" style="width:30%"></span></span><span class="pct">30%</span></div>
+              <div class="bar-row"><span class="lbl">Group work</span><span class="track"><span class="fill alt" style="width:30%"></span></span><span class="pct">30%</span></div>
+              <div class="bar-row"><span class="lbl">Continuous evaluation</span><span class="track"><span class="fill alt" style="width:30%"></span></span><span class="pct">30%</span></div>
+              <div class="bar-row"><span class="lbl">Class participation</span><span class="track"><span class="fill alt" style="width:10%"></span></span><span class="pct">10%</span></div>
+            </div>
+            <ul class="clean" style="margin-top:0.6rem;">
+              <li><strong>Practice deliveries</strong> — each Continuous Evaluation implements a specific algorithm, graded on correctness and performance.</li>
+              <li><strong>Capstone</strong> — teams of 3–4 implement a board game of their choice (sessions 6 → 27).</li>
+              <li><strong>Final exam</strong> — theoretical and practical questions covering sessions 1–26.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="legend">
+          <span class="li"><span class="dot2"></span> theory / live session</span>
+          <span class="li"><span class="dot2 p"></span> practice session</span>
+          <span class="li"><span class="dot2 e"></span> continuous evaluation</span>
+        </div>
+      </section>
+
+      <!-- PROGRAM ------------------------------------------------------- -->
+      <section class="demo" id="program">
+        <h2>Program — 7 modules, 30 sessions</h2>
+        <p class="cap">Every numbered session below comes straight from the syllabus. Where a topic has a live demo on the main page, follow the ▸ link.</p>
+
+        <!-- MODULE 1 -->
+        <div class="module">
+          <div class="mhead">
+            <span class="mnum">Module 1</span>
+            <span class="mtitle">Introduction</span>
+            <span class="mmeta">sessions 1–2 · what algorithms are and how we measure them</span>
+          </div>
+          <div class="timeline">
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 1</span><span class="stitle">Introduction</span></div>
+              <p>Introduction to the course; understand the methodologies and tools used throughout. Get a proper definition of what an algorithm is and the kind of problems algorithms solve.</p>
+              <ul class="topics">
+                <li>Course methodology, tools and grading vehicles</li>
+                <li>Definition of an algorithm; classes of computational problems</li>
+              </ul>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 2</span><span class="stitle">Algorithm analysis</span></div>
+              <p>Introduction to asymptotic notation as a means to describe the efficiency of an algorithm.</p>
+              <ul class="topics">
+                <li>Asymptotic notation (Big-O)</li>
+                <li>Order of growth of time and space as a function of input size</li>
+              </ul>
+              <a class="demolink" href="./index.html#bigO">Big-O comparison demo</a>
+              <div class="reads"><span class="rtag">Cormen — Ch. 2–3</span><span class="rtag">Grokking — Ch. 1</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE 2 -->
+        <div class="module">
+          <div class="mhead">
+            <span class="mnum">Module 2</span>
+            <span class="mtitle">Searching and sorting</span>
+            <span class="mmeta">sessions 3–10 · foundations, recursion &amp; divide-and-conquer</span>
+          </div>
+          <div class="timeline">
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 3</span><span class="stitle">Arrays and Linked Lists. Searching and sorting</span></div>
+              <p>Understand how simple linear data structures store data in memory, and how the distribution of that data impacts how items can be rearranged and looked up.</p>
+              <ul class="topics">
+                <li>Arrays vs. linked lists in memory</li>
+                <li>Effect of data layout on rearrange / lookup cost</li>
+              </ul>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 4</span><span class="stitle">Searching and sorting (II)</span></div>
+              <p>Foundations of sorting a collection of items; implement your first sorting algorithms.</p>
+              <ul class="topics">
+                <li>Insertion Sort</li>
+                <li>Bubble Sort</li>
+              </ul>
+              <a class="demolink" href="./index.html#sort">Sorting race demo</a>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 5</span><span class="stitle">Searching and sorting (III)</span></div>
+              <p>How linked lists can be a good alternative to arrays when memory efficiency matters; when each structure is better suited.</p>
+              <ul class="topics">
+                <li>Linked lists for memory-efficient storage</li>
+                <li>Array vs. linked-list trade-offs</li>
+              </ul>
+            </div>
+            <div class="sess practice">
+              <div class="shead"><span class="snum">Session 6</span><span class="stitle">Introduction to the Group Assignment &amp; Practice Session</span><span class="tag t-practice">practice</span></div>
+              <p>Kick-off of the capstone: from here until session 27, groups implement a board game of their choice, applying the algorithms and data structures learned in the course.</p>
+              <ul class="topics">
+                <li>Board game coding assignment details</li>
+                <li>Rubrics and grading methodology</li>
+                <li>Set up the groups</li>
+                <li>Practice: a coding challenge mirroring the Continuous Evaluations</li>
+              </ul>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 7</span><span class="stitle">Recursive algorithms (I)</span></div>
+              <p>Recursion as a tool to enhance the expressiveness of an algorithm; the Divide and Conquer strategy that splits a large problem into subproblems.</p>
+              <ul class="topics">
+                <li>Recursion fundamentals</li>
+                <li>Divide and Conquer strategy</li>
+              </ul>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 8</span><span class="stitle">Recursive algorithms (II)</span></div>
+              <p>Binary search uses Divide and Conquer to efficiently look up elements in a sorted collection; implement it for any collection of data.</p>
+              <ul class="topics">
+                <li>Binary search — O(log n)</li>
+                <li>Generalizing binary search over any sorted collection</li>
+              </ul>
+              <a class="demolink" href="./index.html#bin">Binary search demo</a>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 9</span><span class="stitle">Recursive Sorting (I)</span></div>
+              <p>Dives deeper into Quicksort — another example of Divide and Conquer, used to sort a collection of linear data.</p>
+              <ul class="topics">
+                <li>Quicksort: partitioning and pivots</li>
+              </ul>
+              <a class="demolink" href="./index.html#sort">Sorting race demo</a>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 10</span><span class="stitle">Recursive sorting (II)</span></div>
+              <p>Merge Sort as a good alternative to Quicksort for Divide-and-Conquer sorting; understand the differences and when to use each.</p>
+              <ul class="topics">
+                <li>Merge Sort</li>
+                <li>Merge Sort vs. Quicksort trade-offs</li>
+              </ul>
+              <a class="demolink" href="./index.html#sort">Sorting race demo</a>
+              <div class="reads"><span class="rtag">Cormen — Ch. 2, 7, 8</span><span class="rtag">Grokking — Ch. 3–4</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE 3 -->
+        <div class="module">
+          <div class="mhead">
+            <span class="mnum">Module 3</span>
+            <span class="mtitle">Linear data structures</span>
+            <span class="mmeta">sessions 11–14 · stacks, queues, multidimensional arrays</span>
+          </div>
+          <div class="timeline">
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 11</span><span class="stitle">Stacks and Queues</span></div>
+              <p>Linear structures built on top of arrays and linked lists that impose ordering restrictions, useful when insertion order affects extraction order.</p>
+              <ul class="topics">
+                <li>Stack (LIFO) and Queue (FIFO) interfaces</li>
+                <li>Efficient use and when each is appropriate</li>
+              </ul>
+            </div>
+            <div class="sess practice">
+              <div class="shead"><span class="snum">Session 12</span><span class="stitle">Practice session: Linear Data Structures</span><span class="tag t-practice">practice</span></div>
+              <p>Solve more complex problems combining the techniques and data structures learned so far, with instructor guidance and student-proposed problems.</p>
+              <ul class="topics">
+                <li>Combined linear-structure problems</li>
+              </ul>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 13</span><span class="stitle">Multidimensional Arrays</span></div>
+              <p>Arrays with more than one dimension; how they are stored in memory and the efficiency of typical read/update operations.</p>
+              <ul class="topics">
+                <li>Memory layout of multidimensional arrays</li>
+                <li>Read/update efficiency and typical use cases</li>
+              </ul>
+            </div>
+            <div class="sess eval">
+              <div class="shead"><span class="snum">Session 14</span><span class="stitle">Practice Test — Continuous Evaluation (I)</span><span class="tag t-eval">evaluation</span></div>
+              <p>A coding task to complete in 80 minutes, covering all material from modules 2 and 3.</p>
+              <ul class="topics">
+                <li>Graded on correctness and performance</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE 4 -->
+        <div class="module">
+          <div class="mhead">
+            <span class="mnum">Module 4</span>
+            <span class="mtitle">Unordered data structures</span>
+            <span class="mmeta">session 15 · hashing</span>
+          </div>
+          <div class="timeline">
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 15</span><span class="stitle">Hashtables</span></div>
+              <p>Entering non-linear data structures: hashtables enable fast item retrieval based on hash functions.</p>
+              <ul class="topics">
+                <li>Hash functions</li>
+                <li>Arranging items in a collection by hash; collisions</li>
+              </ul>
+              <a class="demolink" href="./index.html#hash">Hash table demo</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE 5 -->
+        <div class="module">
+          <div class="mhead">
+            <span class="mnum">Module 5</span>
+            <span class="mtitle">Tree-like data structures</span>
+            <span class="mmeta">sessions 16–20 · trees, traversal, BSTs, heaps</span>
+          </div>
+          <div class="timeline">
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 16</span><span class="stitle">Tree Data Structures (I)</span></div>
+              <p>Trees as graph-like structures: how a tree is arranged and how an algorithm visits all its nodes.</p>
+              <ul class="topics">
+                <li>Tree anatomy and arrangement</li>
+                <li>Traversal — visiting every node</li>
+              </ul>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 17</span><span class="stitle">Tree Data Structures (II)</span></div>
+              <p>Breadth First and Depth First, the most common traversal techniques; implement both and know when to use each.</p>
+              <ul class="topics">
+                <li>Breadth First Search (BFS)</li>
+                <li>Depth First Search (DFS)</li>
+              </ul>
+              <a class="demolink" href="./index.html#graph">BFS / DFS traversal demo</a>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 18</span><span class="stitle">Tree Data Structures (III)</span></div>
+              <p>A deeper look at a commonly used tree: the Binary Search Tree.</p>
+              <ul class="topics">
+                <li>Binary Search Tree (BST) — insert, search, ordering invariant</li>
+              </ul>
+            </div>
+            <div class="sess practice">
+              <div class="shead"><span class="snum">Session 19</span><span class="stitle">Practice Session: Tree Data Structures</span><span class="tag t-practice">practice</span></div>
+              <p>Entirely dedicated to problems where trees are the right data structure, with instructor guidance and student-proposed problems.</p>
+              <ul class="topics">
+                <li>Tree-based problem solving</li>
+              </ul>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 20</span><span class="stitle">Heaps and Priority Queues</span></div>
+              <p>Tree-like structures where items are arranged by priority or weight; how they work and when to use them.</p>
+              <ul class="topics">
+                <li>Heap property; priority queues</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE 6 -->
+        <div class="module">
+          <div class="mhead">
+            <span class="mnum">Module 6</span>
+            <span class="mtitle">Graphs</span>
+            <span class="mmeta">sessions 21–24 · traversal, shortest paths, cycles, topological sort</span>
+          </div>
+          <div class="timeline">
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 21</span><span class="stitle">Graphs (I)</span></div>
+              <p>Graphs hold many (possibly directional and/or weighted) relations among elements. What a graph is, what problems it suits, how to traverse it and find shortest paths.</p>
+              <ul class="topics">
+                <li>Graph definitions; directed / weighted edges</li>
+                <li>Graph traversal and shortest path between two nodes</li>
+                <li>Dijkstra's Shortest Path algorithm</li>
+              </ul>
+              <a class="demolink" href="./index.html#path">Pathfinding demo (BFS / Dijkstra / A*)</a>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 22</span><span class="stitle">Graphs (II) — Bellman-Ford, cycles &amp; topological sort</span></div>
+              <p>Dijkstra's limitations and how algorithms like Bellman-Ford come to the rescue.</p>
+              <ul class="topics">
+                <li>Bellman-Ford's algorithm</li>
+                <li>Cycle detection using Depth First</li>
+                <li>Topological sorting of Directed Acyclic Graphs</li>
+              </ul>
+              <a class="demolink" href="./index.html#path">Pathfinding demo</a>
+            </div>
+            <div class="sess practice">
+              <div class="shead"><span class="snum">Session 23</span><span class="stitle">Practice Session: Graphs</span><span class="tag t-practice">practice</span></div>
+              <p>Entirely dedicated to problems where graphs are the right data structure, with instructor guidance and student-proposed problems.</p>
+              <ul class="topics">
+                <li>Graph-based problem solving</li>
+              </ul>
+            </div>
+            <div class="sess eval">
+              <div class="shead"><span class="snum">Session 24</span><span class="stitle">Practice Test — Continuous Evaluation: Graph-like Data Structures</span><span class="tag t-eval">evaluation</span></div>
+              <p>A coding task to complete in 80 minutes, covering all material from modules 4, 5 and 6.</p>
+              <ul class="topics">
+                <li>Graded on correctness and performance</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE 7 -->
+        <div class="module">
+          <div class="mhead">
+            <span class="mnum">Module 7</span>
+            <span class="mtitle">Dynamic Programming and Greedy Algorithms</span>
+            <span class="mmeta">sessions 25–30 · strategies, presentations &amp; final exam</span>
+          </div>
+          <div class="timeline">
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 25</span><span class="stitle">Greedy Algorithms</span></div>
+              <p>Tackling the "impossible" — problems with no fast algorithmic solution (NP-complete). How to identify them and use approximation algorithms to find approximate solutions quickly.</p>
+              <ul class="topics">
+                <li>NP-complete problems</li>
+                <li>Greedy &amp; approximation algorithms</li>
+              </ul>
+              <a class="demolink" href="./index.html#nq">Backtracking — N-Queens demo</a>
+            </div>
+            <div class="sess">
+              <div class="shead"><span class="snum">Session 26</span><span class="stitle">Dynamic Programming</span></div>
+              <p>Solving complex problems by breaking them into simpler subproblems, solving each once, and storing the results for reuse.</p>
+              <ul class="topics">
+                <li>Overlapping subproblems — same subproblems solved repeatedly</li>
+                <li>Optimal substructure — optimal solution built from optimal subsolutions</li>
+              </ul>
+              <a class="demolink" href="./index.html#fib">DP — Fibonacci memoization demo</a>
+              <a class="demolink" href="./index.html#ks">0/1 Knapsack DP table demo</a>
+            </div>
+            <div class="sess practice">
+              <div class="shead"><span class="snum">Session 27</span><span class="stitle">Groupwork Presentations (I)</span><span class="tag t-practice">practice</span></div>
+              <p>The first half of the groups give 10–15 minute presentations of their board-game results.</p>
+              <ul class="topics">
+                <li>Why they chose the board game</li>
+                <li>What algorithms they used and why</li>
+                <li>What data structures they used and why</li>
+                <li>What problems they hit and how they solved them</li>
+              </ul>
+            </div>
+            <div class="sess practice">
+              <div class="shead"><span class="snum">Session 28</span><span class="stitle">Groupwork Presentations (II)</span><span class="tag t-practice">practice</span></div>
+              <p>The remaining half of the groups give their 10–15 minute presentations on the same points.</p>
+              <ul class="topics">
+                <li>Board-game choice, algorithms, data structures and problems solved</li>
+              </ul>
+            </div>
+            <div class="sess eval">
+              <div class="shead"><span class="snum">Session 29</span><span class="stitle">Practice Test — Continuous Evaluation: Greedy &amp; Dynamic Programming</span><span class="tag t-eval">evaluation</span></div>
+              <p>A coding task to complete in 80 minutes, covering all material from module 7.</p>
+              <ul class="topics">
+                <li>Graded on correctness and performance</li>
+              </ul>
+            </div>
+            <div class="sess eval">
+              <div class="shead"><span class="snum">Session 30</span><span class="stitle">Final Exam</span><span class="tag t-eval">evaluation</span></div>
+              <p>A test exercising understanding of all topics covered from session 1 to session 26 — theoretical and practical.</p>
+              <ul class="topics">
+                <li>Comprehensive theory + practice</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BIBLIOGRAPHY -------------------------------------------------- -->
+      <section class="demo" id="biblio">
+        <h2>Bibliography</h2>
+        <p class="cap">Recommended reading.</p>
+        <div class="biblio">
+          <div class="book">
+            <span class="au">Cormen, Leiserson, Rivest &amp; Stein.</span>
+            <span class="ti"> Introduction to Algorithms.</span>
+            <span class="isbn"> ISBN 9780262033848 (Digital)</span>
+          </div>
+          <div class="book">
+            <span class="au">Aditya Y. Bhargava.</span>
+            <span class="ti"> Grokking Algorithms.</span>
+            <span class="isbn"> ISBN 9781617292230 (Digital)</span>
+          </div>
+          <div class="book">
+            <span class="au">Donald Knuth.</span>
+            <span class="ti"> The Art of Computer Programming.</span>
+            <span class="isbn"> ISBN 9780201896831 (Digital)</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>algos-lab — Andrea Montana · IE BCSAI</span>
+      <span class="more">
+        <a href="https://github.com/andreaisabelmontana/stats-lab" target="_blank">stats-lab</a>
+        <a href="https://github.com/andreaisabelmontana/calc-lab"  target="_blank">calc-lab</a>
+        <a href="https://github.com/andreaisabelmontana/sql-lab"   target="_blank">sql-lab</a>
+        <a href="https://github.com/andreaisabelmontana/algos-lab" target="_blank">source</a>
+      </span>
+    </footer>
+  </body>
+</html>
