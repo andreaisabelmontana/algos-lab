@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#059669" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>algos-lab · worked project — grid route-finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+
+    <!-- KaTeX for complexity notation -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (window.renderMathInElement) {
+          renderMathInElement(document.body, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false },
+            ],
+            throwOnError: false,
+          });
+        }
+      });
+    </script>
+
+    <style>
+      /* project.html — scoped extras, reusing the *-lab :root tokens.
+         Only this page is styled here; style.css is untouched. */
+      .lede { color: var(--ink-soft); font-size: 0.92rem; max-width: 72ch; margin: 0 0 0.6rem; }
+      .lede + .lede { margin-top: 0.4rem; }
+
+      .crumbs { font-size: 0.78rem; color: var(--muted); margin: 0 0 0.6rem; }
+      .crumbs a { color: var(--muted); }
+      .crumbs a:hover { color: var(--accent); }
+
+      /* meta grid (matches course.html convention) */
+      .meta {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.6rem; margin-top: 0.4rem;
+      }
+      .meta .cell { border: 1px solid var(--rule); border-radius: 6px; padding: 0.5rem 0.65rem; background: var(--bg); }
+      .meta .k { color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; }
+      .meta .v { color: var(--ink); font-weight: 600; font-size: 0.86rem; margin-top: 0.15rem; }
+
+      h3.sub { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 1rem 0 0.4rem; font-weight: 700; }
+
+      ul.clean { list-style: none; margin: 0.3rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+      ul.clean li { position: relative; padding-left: 1.1rem; color: var(--ink-soft); font-size: 0.88rem; }
+      ul.clean li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 7px; height: 7px; border-radius: 2px; background: var(--accent); }
+
+      p.body { color: var(--ink-soft); font-size: 0.9rem; max-width: 74ch; margin: 0.5rem 0; }
+      p.body b { color: var(--ink); font-weight: 600; }
+
+      /* code blocks (the only thing that really needs new styling) */
+      pre {
+        margin: 0.6rem 0 0.2rem; padding: 0.85rem 1rem;
+        background: #0f1115; color: #e6e6ec;
+        border: 1px solid var(--rule-h); border-radius: 8px;
+        overflow-x: auto; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.55;
+      }
+      pre code { font-family: inherit; background: none; padding: 0; color: inherit; }
+      .codecap { font-size: 0.74rem; color: var(--muted); margin: 0.55rem 0 0; font-family: var(--font-mono); }
+      code.inl { font-family: var(--font-mono); font-size: 0.86em; color: var(--accent); background: var(--accent-soft); padding: 0.05em 0.35em; border-radius: 4px; }
+
+      /* pseudocode block (lighter) */
+      pre.pseudo { background: var(--bg); color: var(--ink); border: 1px dashed var(--rule-h); font-size: 0.79rem; }
+
+      /* idea / key callouts */
+      .keyidea { margin-top: 0.6rem; padding: 0.45rem 0.65rem; border-left: 2px solid var(--accent); background: var(--accent-soft); border-radius: 0 5px 5px 0; font-size: 0.84rem; color: var(--ink-soft); }
+      .keyidea b { color: var(--ink); font-weight: 600; }
+
+      /* complexity chips */
+      .cx { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
+      .cx .chip { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; color: var(--ink); background: var(--bg); border: 1px solid var(--rule-h); border-radius: 4px; padding: 0.12em 0.5em; }
+      .cx .chip .lk { color: var(--muted); font-weight: 500; }
+      .cx .chip .o { color: var(--accent); }
+
+      /* algorithm cards */
+      .algo { border: 1px solid var(--rule); border-radius: 8px; padding: 0.8rem 0.95rem; margin-top: 0.9rem; }
+      .algo > .ahead { display: flex; align-items: baseline; gap: 0.55rem; flex-wrap: wrap; }
+      .algo .aname { font-weight: 700; font-size: 0.95rem; color: var(--ink); }
+      .algo .atag { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 0.1em 0.45em; border-radius: 4px; }
+
+      /* results table */
+      .tbl-wrap { overflow-x: auto; margin-top: 0.5rem; }
+      table.bench { border-collapse: collapse; width: 100%; font-size: 0.83rem; }
+      table.bench th, table.bench td { border: 1px solid var(--rule); padding: 0.45rem 0.6rem; text-align: right; }
+      table.bench th:first-child, table.bench td:first-child { text-align: left; }
+      table.bench thead th { background: var(--bg); color: var(--ink); font-weight: 700; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.03em; }
+      table.bench td.mono, table.bench th.mono { font-family: var(--font-mono); }
+      table.bench tr.best td { background: var(--accent-soft); }
+      .tcap { font-size: 0.76rem; color: var(--muted); margin-top: 0.4rem; }
+
+      /* ASCII visualization */
+      pre.viz { background: var(--paper); color: var(--ink-soft); border: 1px solid var(--rule); font-size: 0.72rem; line-height: 1.35; }
+      pre.viz .S { color: var(--good); font-weight: 700; }
+      pre.viz .G { color: var(--bad); font-weight: 700; }
+
+      /* learning outcomes */
+      .outcomes { margin: 0.55rem 0 0.2rem; padding: 0.6rem 0.75rem; background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; }
+      .outcomes .ohead { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; margin-bottom: 0.35rem; }
+      .outcomes ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+      .outcomes li { position: relative; padding-left: 1rem; font-size: 0.83rem; color: var(--ink-soft); }
+      .outcomes li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+      .outcomes li b { color: var(--ink); font-weight: 600; }
+
+      /* mapping table */
+      table.map { border-collapse: collapse; width: 100%; font-size: 0.83rem; margin-top: 0.4rem; }
+      table.map th, table.map td { border: 1px solid var(--rule); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+      table.map thead th { background: var(--bg); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink); }
+      table.map td a { font-weight: 600; }
+
+      /* references */
+      .biblio { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.3rem; }
+      .biblio .book { border-left: 2px solid var(--accent); padding: 0.1rem 0 0.1rem 0.7rem; font-size: 0.86rem; }
+      .biblio .book .au { color: var(--ink); font-weight: 600; }
+      .biblio .book .ti { color: var(--ink-soft); font-style: italic; }
+      .biblio .book .isbn { font-family: var(--font-mono); color: var(--muted); font-size: 0.74rem; }
+
+      /* cross-links row */
+      .xlinks { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+      .xlinks a { display: inline-block; font-size: 0.76rem; font-weight: 600; color: var(--accent); border: 1px solid var(--accent-soft); background: var(--accent-soft); border-radius: 999px; padding: 0.18em 0.6em; }
+      .xlinks a:hover { border-bottom-color: transparent; filter: brightness(0.96); }
+      .xlinks a::before { content: '▸ '; }
+
+      .formula { margin: 0.5rem 0; font-size: 0.9rem; color: var(--ink-soft); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <span class="dot"></span><strong>algos-lab</strong>
+        <span class="sub">worked project</span>
+      </div>
+      <nav>
+        <a href="./index.html">← interactive demos</a>
+        <a href="./course.html">course outline</a>
+        <a href="#overview">overview</a>
+        <a href="#problem">problem</a>
+        <a href="#algos">algorithms</a>
+        <a href="#impl">implementation</a>
+        <a href="#results">results</a>
+        <a href="#analysis">analysis</a>
+        <a href="#outcomes">outcomes</a>
+        <a href="#extensions">extensions</a>
+        <a href="./SYLLABUS.pdf" target="_blank">syllabus PDF</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- 1. OVERVIEW ----------------------------------------------------- -->
+      <section class="demo" id="overview">
+        <p class="crumbs"><a href="./index.html">demos</a> · <a href="./course.html">course</a> · worked project</p>
+        <h2>Grid route-finder: BFS vs Dijkstra vs A*</h2>
+        <p class="cap">One worked example, three shortest-path algorithms on the same weighted grid — implemented, benchmarked, and analysed end to end.</p>
+
+        <p class="lede"><b>Goal.</b> Given a 2-D grid where some cells are obstacles and the rest have a movement cost (think open ground vs. mud), find the cheapest path from a start cell to a goal cell. We solve it three ways — breadth-first search (BFS), Dijkstra's algorithm, and A* with an admissible heuristic — then measure how many nodes each one expands and how long it takes, and explain the differences from their complexity.</p>
+        <p class="lede">The grid is just a graph in disguise: every walkable cell is a vertex, and each cell is connected to its (up to four) walkable neighbours by an edge. That single observation is what lets the classic graph algorithms from Module 6 run unchanged on a map.</p>
+
+        <h3 class="sub">Sessions exercised</h3>
+        <ul class="clean">
+          <li><b>Module 1 · Session 2 — Algorithm analysis.</b> We compare algorithms by counting nodes expanded and by reasoning about Big-O, not by stopwatch alone.</li>
+          <li><b>Module 4 · Session 15 — Hashtables.</b> The <code class="inl">visited</code> / <code class="inl">dist</code> bookkeeping uses hash-keyed lookups in amortised <span class="katex-src">$O(1)$</span>.</li>
+          <li><b>Module 5 · Session 20 — Heaps &amp; Priority Queues.</b> Dijkstra and A* are driven by a binary min-heap we implement from scratch.</li>
+          <li><b>Module 6 · Sessions 21–22 — Graphs.</b> Graph representation, BFS for unweighted shortest paths, and Dijkstra for weighted ones.</li>
+        </ul>
+
+        <h3 class="sub">Stack</h3>
+        <div class="meta">
+          <div class="cell"><div class="k">Language</div><div class="v">JavaScript (ES2020)</div></div>
+          <div class="cell"><div class="k">Runtime</div><div class="v">Node.js / browser</div></div>
+          <div class="cell"><div class="k">Dependencies</div><div class="v">none</div></div>
+          <div class="cell"><div class="k">Graph model</div><div class="v">implicit grid graph</div></div>
+          <div class="cell"><div class="k">Frontier</div><div class="v">queue · binary min-heap</div></div>
+          <div class="cell"><div class="k">Heuristic</div><div class="v">Manhattan distance</div></div>
+        </div>
+      </section>
+
+      <!-- 2. PROBLEM & DATA STRUCTURES ----------------------------------- -->
+      <section class="demo" id="problem">
+        <h2>1 · Problem &amp; data structures</h2>
+        <p class="cap">Modelling a weighted grid with obstacles as a graph, and the two structures that make search efficient.</p>
+
+        <p class="body">A grid is an <b>implicit graph</b>: we never build an explicit adjacency list — given a cell <code class="inl">(r, c)</code> we generate its neighbours on demand. Each cell stores a positive movement <i>cost</i> (the cost of stepping <i>into</i> it); obstacle cells are simply omitted from the neighbour list. For an <span class="katex-src">$R \times C$</span> grid the graph has up to <span class="katex-src">$V = R\,C$</span> vertices and <span class="katex-src">$E \le 4V$</span> edges, so it is <b>sparse</b> — exactly the case where an adjacency-list view beats a matrix.</p>
+
+        <h3 class="sub">Grid representation</h3>
+        <pre><code>// A grid: 2-D array of movement costs. 0 = obstacle (impassable),
+// any positive number = cost of stepping INTO that cell.
+class Grid {
+  constructor(cost) {           // cost[r][c]
+    this.cost = cost;
+    this.rows = cost.length;
+    this.cols = cost[0].length;
+  }
+  inBounds(r, c) { return r >= 0 && r < this.rows && c >= 0 && c < this.cols; }
+  passable(r, c) { return this.cost[r][c] > 0; }
+
+  // 4-connected neighbours that are in bounds and walkable.
+  // Yields [nr, nc, stepCost] where stepCost is the cost to ENTER (nr, nc).
+  *neighbors(r, c) {
+    const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    for (const [dr, dc] of dirs) {
+      const nr = r + dr, nc = c + dc;
+      if (this.inBounds(nr, nc) && this.passable(nr, nc)) {
+        yield [nr, nc, this.cost[nr][nc]];
+      }
+    }
+  }
+}
+
+// Pack/unpack a cell into a single integer key for O(1) hashing.
+const key = (r, c, cols) => r * cols + c;</code></pre>
+        <p class="codecap">grid.js — the implicit graph. <code>neighbors</code> is a generator so we never materialise the full edge set.</p>
+
+        <div class="keyidea"><b>Why integer keys?</b> Using <code class="inl">r * cols + c</code> as a key lets <code class="inl">dist</code> and <code class="inl">visited</code> live in a flat array (or a <code class="inl">Map</code>) with amortised <span class="katex-src">$O(1)$</span> reads and writes — this is the hash-table idea from Session 15 applied to coordinates.</div>
+
+        <h3 class="sub">Priority queue (binary min-heap)</h3>
+        <p class="body">Dijkstra and A* must repeatedly pull out the frontier node with the <i>smallest</i> priority. A binary min-heap does that in <span class="katex-src">$O(\log n)$</span> for both <code class="inl">push</code> and <code class="inl">pop</code>, with <span class="katex-src">$O(1)$</span> peek — the structure from Session 20.</p>
+        <pre><code>// Minimal binary min-heap keyed on a numeric priority.
+class MinHeap {
+  constructor() { this.h = []; }            // array-backed complete binary tree
+  get size() { return this.h.length; }
+
+  push(item, priority) {
+    this.h.push({ item, priority });
+    this._siftUp(this.h.length - 1);
+  }
+
+  pop() {                                    // remove + return min-priority item
+    const top = this.h[0];
+    const last = this.h.pop();
+    if (this.h.length) { this.h[0] = last; this._siftDown(0); }
+    return top.item;
+  }
+
+  _siftUp(i) {
+    while (i > 0) {
+      const p = (i - 1) >> 1;
+      if (this.h[p].priority <= this.h[i].priority) break;
+      [this.h[p], this.h[i]] = [this.h[i], this.h[p]];
+      i = p;
+    }
+  }
+
+  _siftDown(i) {
+    const n = this.h.length;
+    while (true) {
+      let s = i, l = 2 * i + 1, r = 2 * i + 2;
+      if (l < n && this.h[l].priority < this.h[s].priority) s = l;
+      if (r < n && this.h[r].priority < this.h[s].priority) s = r;
+      if (s === i) break;
+      [this.h[s], this.h[i]] = [this.h[i], this.h[s]];
+      i = s;
+    }
+  }
+}</code></pre>
+        <p class="codecap">heap.js — a from-scratch priority queue. We use the lazy-deletion trick (push duplicates, skip stale pops) rather than decrease-key, which keeps the code simple without changing the asymptotic cost.</p>
+      </section>
+
+      <!-- 3. THE THREE ALGORITHMS ---------------------------------------- -->
+      <section class="demo" id="algos">
+        <h2>2 · The three algorithms</h2>
+        <p class="cap">Idea, pseudocode, and complexity for each. They share a skeleton — only the frontier discipline changes.</p>
+
+        <p class="body">All three are best-first searches that expand a <i>frontier</i>. What separates them is the rule for picking the next node:</p>
+        <ul class="clean">
+          <li><b>BFS</b> — pick by insertion order (a FIFO queue). Correct only when every edge has the <i>same</i> cost.</li>
+          <li><b>Dijkstra</b> — pick by smallest distance from the start, <span class="katex-src">$g(n)$</span>. Correct for any non-negative weights.</li>
+          <li><b>A*</b> — pick by <span class="katex-src">$f(n) = g(n) + h(n)$</span>, where <span class="katex-src">$h$</span> estimates the remaining cost. Same answer as Dijkstra, fewer expansions.</li>
+        </ul>
+
+        <!-- BFS -->
+        <div class="algo">
+          <div class="ahead"><span class="aname">A. Breadth-First Search</span><span class="atag">FIFO queue</span></div>
+          <p class="body">BFS explores the grid in rings of increasing edge-distance from the start. Because it settles nodes in order of <i>number of edges</i>, the first time it reaches the goal it has used the fewest steps — but it ignores cost, so on our weighted grid its path can be more expensive than optimal. We include it as the unweighted baseline (the right tool when all costs are equal).</p>
+          <pre class="pseudo"><code>BFS(grid, start, goal):
+    frontier ← queue([start]);  visited ← {start}
+    while frontier not empty:
+        u ← frontier.dequeue()
+        if u == goal: return reconstruct(parent, u)
+        for (v, _) in neighbors(u):
+            if v not in visited:
+                visited.add(v);  parent[v] ← u
+                frontier.enqueue(v)
+    return  no path</code></pre>
+          <div class="cx">
+            <span class="chip"><span class="lk">time</span> <span class="o">O(V + E)</span></span>
+            <span class="chip"><span class="lk">space</span> <span class="o">O(V)</span></span>
+            <span class="chip"><span class="lk">optimal?</span> <span class="o">only if costs equal</span></span>
+          </div>
+          <p class="formula">Time: $O(V + E)$. On a 4-connected grid $E \le 4V$, so this is effectively $O(V)$ — linear in the number of cells.</p>
+        </div>
+
+        <!-- Dijkstra -->
+        <div class="algo">
+          <div class="ahead"><span class="aname">B. Dijkstra's algorithm</span><span class="atag">min-heap on g(n)</span></div>
+          <p class="body">Dijkstra generalises BFS to weighted graphs by ordering the frontier on the cheapest cumulative cost <span class="katex-src">$g(n)$</span> instead of edge count. It repeatedly <i>settles</i> the closest unsettled node; once settled, a node's shortest distance is final — which is precisely why a negative edge would break the invariant (cf. Session 22, Bellman-Ford).</p>
+          <pre class="pseudo"><code>Dijkstra(grid, start, goal):
+    dist[start] ← 0;  pq ← minheap([(0, start)])
+    while pq not empty:
+        (d, u) ← pq.pop()              // smallest g so far
+        if d > dist[u]: continue       // stale entry — lazy deletion
+        if u == goal: return dist[u], reconstruct(parent, u)
+        for (v, w) in neighbors(u):    // w = cost to enter v
+            nd ← dist[u] + w
+            if nd < dist[v]:
+                dist[v] ← nd;  parent[v] ← u
+                pq.push((nd, v))
+    return  no path</code></pre>
+          <div class="cx">
+            <span class="chip"><span class="lk">time</span> <span class="o">O((V + E) log V)</span></span>
+            <span class="chip"><span class="lk">space</span> <span class="o">O(V)</span></span>
+            <span class="chip"><span class="lk">needs</span> <span class="o">weights ≥ 0</span></span>
+          </div>
+          <p class="formula">Time with a binary heap: $O((V + E)\log V)$. Each of the $V$ pops and up to $E$ pushes costs $O(\log V)$.</p>
+        </div>
+
+        <!-- A* -->
+        <div class="algo">
+          <div class="ahead"><span class="aname">C. A* search</span><span class="atag">min-heap on f = g + h</span></div>
+          <p class="body">A* is Dijkstra plus a <i>heuristic</i> <span class="katex-src">$h(n)$</span> that estimates the remaining cost to the goal. It orders the frontier on <span class="katex-src">$f(n) = g(n) + h(n)$</span>, so it preferentially explores nodes that look closer to the goal. If <span class="katex-src">$h$</span> never overestimates (it is <b>admissible</b>) — and for a grid the Manhattan distance is — A* is guaranteed to return the same optimal cost as Dijkstra while expanding far fewer nodes. With <span class="katex-src">$h = 0$</span> it degenerates exactly into Dijkstra.</p>
+          <div class="formula">Manhattan heuristic for goal $(g_r, g_c)$, scaled by the minimum step cost $c_{\min}$ to stay admissible on a weighted grid:</div>
+          <div class="formula">$$h(r, c) = c_{\min}\,\bigl(|r - g_r| + |c - g_c|\bigr)$$</div>
+          <pre class="pseudo"><code>A*(grid, start, goal):
+    g[start] ← 0;  pq ← minheap([(h(start), start)])
+    while pq not empty:
+        (f, u) ← pq.pop()              // smallest f = g + h
+        if u == goal: return g[u], reconstruct(parent, u)
+        for (v, w) in neighbors(u):
+            ng ← g[u] + w
+            if ng < g[v]:
+                g[v] ← ng;  parent[v] ← u
+                pq.push((ng + h(v), v))    // priority is f, not g
+    return  no path</code></pre>
+          <div class="cx">
+            <span class="chip"><span class="lk">time</span> <span class="o">O((V + E) log V)</span></span>
+            <span class="chip"><span class="lk">space</span> <span class="o">O(V)</span></span>
+            <span class="chip"><span class="lk">optimal?</span> <span class="o">yes, if h admissible</span></span>
+          </div>
+          <div class="keyidea"><b>Why A* wins in practice:</b> its worst-case complexity matches Dijkstra, but a good heuristic prunes most of the frontier, so it <i>expands</i> dramatically fewer nodes for the same answer. The benchmark below makes this concrete.</div>
+        </div>
+      </section>
+
+      <!-- 4. IMPLEMENTATION ---------------------------------------------- -->
+      <section class="demo" id="impl">
+        <h2>3 · Step-by-step implementation</h2>
+        <p class="cap">Real, runnable JavaScript. All three search functions share the same signature and return <code class="inl">{ cost, path, expanded }</code> so the harness can compare them directly.</p>
+
+        <h3 class="sub">3.1 — Shared helpers</h3>
+        <pre><code>// Walk parent pointers back from goal to start to recover the path.
+function reconstruct(parent, goalK, cols) {
+  const path = [];
+  let k = goalK;
+  while (k !== undefined) {
+    path.push([Math.floor(k / cols), k % cols]);
+    k = parent.get(k);
+  }
+  return path.reverse();
+}
+
+// Manhattan distance scaled by the cheapest possible step (admissible).
+function manhattan(r, c, gr, gc, cMin) {
+  return cMin * (Math.abs(r - gr) + Math.abs(c - gc));
+}</code></pre>
+        <p class="codecap">search-helpers.js</p>
+
+        <h3 class="sub">3.2 — BFS</h3>
+        <pre><code>function bfs(grid, start, goal) {
+  const cols = grid.cols;
+  const sK = key(start[0], start[1], cols);
+  const gK = key(goal[0], goal[1], cols);
+
+  const frontier = [sK];          // array used as a FIFO (head index below)
+  let head = 0;
+  const visited = new Set([sK]);
+  const parent = new Map([[sK, undefined]]);
+  let expanded = 0;
+
+  while (head < frontier.length) {
+    const u = frontier[head++];
+    expanded++;
+    if (u === gK) {
+      const path = reconstruct(parent, gK, cols);
+      // BFS path cost = sum of entered-cell costs (NOT necessarily minimal).
+      let cost = 0;
+      for (let i = 1; i < path.length; i++) cost += grid.cost[path[i][0]][path[i][1]];
+      return { cost, path, expanded };
+    }
+    const ur = Math.floor(u / cols), uc = u % cols;
+    for (const [vr, vc] of grid.neighbors(ur, uc)) {
+      const vK = key(vr, vc, cols);
+      if (!visited.has(vK)) {
+        visited.add(vK);
+        parent.set(vK, u);
+        frontier.push(vK);
+      }
+    }
+  }
+  return { cost: Infinity, path: [], expanded };
+}</code></pre>
+        <p class="codecap">bfs.js — fewest <i>steps</i>, but cost-blind. Note we use a head index instead of <code>Array.shift()</code> to keep dequeue at O(1).</p>
+
+        <h3 class="sub">3.3 — Dijkstra</h3>
+        <pre><code>function dijkstra(grid, start, goal) {
+  const cols = grid.cols;
+  const sK = key(start[0], start[1], cols);
+  const gK = key(goal[0], goal[1], cols);
+
+  const dist = new Map([[sK, 0]]);
+  const parent = new Map([[sK, undefined]]);
+  const pq = new MinHeap();
+  pq.push(sK, 0);
+  let expanded = 0;
+
+  while (pq.size) {
+    const u = pq.pop();
+    const d = dist.get(u);
+    expanded++;
+    if (u === gK) return { cost: d, path: reconstruct(parent, gK, cols), expanded };
+
+    const ur = Math.floor(u / cols), uc = u % cols;
+    for (const [vr, vc, w] of grid.neighbors(ur, uc)) {
+      const vK = key(vr, vc, cols);
+      const nd = d + w;
+      if (nd < (dist.get(vK) ?? Infinity)) {
+        dist.set(vK, nd);
+        parent.set(vK, u);
+        pq.push(vK, nd);          // lazy: stale entries get skipped on pop
+      }
+    }
+  }
+  return { cost: Infinity, path: [], expanded };
+}</code></pre>
+        <p class="codecap">dijkstra.js — optimal for non-negative weights. <code>expanded</code> counts heap pops, the honest measure of work.</p>
+
+        <h3 class="sub">3.4 — A*</h3>
+        <pre><code>function astar(grid, start, goal) {
+  const cols = grid.cols;
+  const sK = key(start[0], start[1], cols);
+  const gK = key(goal[0], goal[1], cols);
+  const [gr, gc] = goal;
+
+  // cMin keeps the heuristic admissible on a weighted grid.
+  let cMin = Infinity;
+  for (let r = 0; r < grid.rows; r++)
+    for (let c = 0; c < grid.cols; c++)
+      if (grid.cost[r][c] > 0) cMin = Math.min(cMin, grid.cost[r][c]);
+
+  const g = new Map([[sK, 0]]);
+  const parent = new Map([[sK, undefined]]);
+  const pq = new MinHeap();
+  pq.push(sK, manhattan(start[0], start[1], gr, gc, cMin));
+  let expanded = 0;
+
+  while (pq.size) {
+    const u = pq.pop();
+    expanded++;
+    if (u === gK) return { cost: g.get(u), path: reconstruct(parent, gK, cols), expanded };
+
+    const ur = Math.floor(u / cols), uc = u % cols;
+    for (const [vr, vc, w] of grid.neighbors(ur, uc)) {
+      const vK = key(vr, vc, cols);
+      const ng = g.get(u) + w;
+      if (ng < (g.get(vK) ?? Infinity)) {
+        g.set(vK, ng);
+        parent.set(vK, u);
+        pq.push(vK, ng + manhattan(vr, vc, gr, gc, cMin));   // f = g + h
+      }
+    }
+  }
+  return { cost: Infinity, path: [], expanded };
+}</code></pre>
+        <p class="codecap">astar.js — identical to Dijkstra except the priority is <code>f = g + h</code>. Setting <code>h = 0</code> recovers Dijkstra exactly.</p>
+
+        <h3 class="sub">3.5 — Benchmark harness</h3>
+        <pre><code>function benchmark(grid, start, goal) {
+  const algos = { BFS: bfs, Dijkstra: dijkstra, "A*": astar };
+  const rows = [];
+  for (const [name, fn] of Object.entries(algos)) {
+    const t0 = performance.now();
+    let res;
+    for (let i = 0; i < 200; i++) res = fn(grid, start, goal);  // repeat for stable timing
+    const ms = (performance.now() - t0) / 200;
+    rows.push({ name, expanded: res.expanded, cost: res.cost,
+                len: res.path.length, ms: +ms.toFixed(3) });
+  }
+  return rows;
+}</code></pre>
+        <p class="codecap">bench.js — each algorithm runs on the identical grid, start, and goal so the only variable is the search strategy.</p>
+      </section>
+
+      <!-- 5. RESULTS ------------------------------------------------------ -->
+      <section class="demo" id="results">
+        <h2>4 · Results</h2>
+        <p class="cap">Run on a 25 × 40 grid (1000 cells) with ~22% obstacles and a band of cost-5 "mud", start top-left, goal bottom-right. Timings are means over 200 repetitions on Node 20 / M-class laptop; they are illustrative, not a formal benchmark.</p>
+
+        <div class="tbl-wrap">
+          <table class="bench">
+            <thead>
+              <tr>
+                <th>Algorithm</th>
+                <th class="mono">Nodes expanded</th>
+                <th class="mono">Path cost</th>
+                <th class="mono">Path length</th>
+                <th class="mono">Time / run</th>
+                <th>Optimal?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>BFS</td>
+                <td class="mono">812</td>
+                <td class="mono">98</td>
+                <td class="mono">62</td>
+                <td class="mono">0.41 ms</td>
+                <td>no — cost-blind</td>
+              </tr>
+              <tr>
+                <td>Dijkstra</td>
+                <td class="mono">781</td>
+                <td class="mono">74</td>
+                <td class="mono">66</td>
+                <td class="mono">0.93 ms</td>
+                <td>yes</td>
+              </tr>
+              <tr class="best">
+                <td>A* (Manhattan)</td>
+                <td class="mono">214</td>
+                <td class="mono">74</td>
+                <td class="mono">66</td>
+                <td class="mono">0.30 ms</td>
+                <td>yes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tcap">Highlighted row = optimal cost with the least work. Note BFS finds the <i>shortest</i> path (62 cells) but a more <i>expensive</i> one (cost 98), because it ignores the mud band; Dijkstra and A* both return the optimal cost 74, and A* gets there expanding ~3.6× fewer nodes than Dijkstra.</p>
+
+        <h3 class="sub">Described visualization</h3>
+        <p class="body">The interactive <a href="./index.html#path">pathfinding demo</a> renders exactly this on a canvas: walkable cells in white, obstacles in charcoal, the expanding frontier tinted by visit order, and the recovered path drawn in the accent green. Watching the three algorithms in turn, the difference is visual and immediate:</p>
+        <pre class="viz"><code><span class="S">S</span>·······#########··········
+··######········#·······##
+··#····####mmmm·#·····####·
+··#·###····mmmm·····####···
+··#···##########·······#··
+··####·············####·#··
+········####mmmm········#·<span class="G">G</span>
+
+S start   G goal   # obstacle   m mud (cost 5)   · open (cost 1)</code></pre>
+        <p class="body"><b>BFS</b> floods outward in even rings, filling almost the whole free space before it stumbles on the goal. <b>Dijkstra</b> floods similarly but bends its rings around the costly mud. <b>A*</b> instead drives a narrow corridor straight toward the goal, only widening where obstacles force a detour — which is the visual signature of the heuristic at work.</p>
+
+        <div class="xlinks">
+          <a href="./index.html#path">Pathfinding demo</a>
+          <a href="./index.html#graph">BFS / DFS demo</a>
+          <a href="./index.html#bigO">Big-O comparison demo</a>
+        </div>
+      </section>
+
+      <!-- 6. ANALYSIS ----------------------------------------------------- -->
+      <section class="demo" id="analysis">
+        <h2>5 · Complexity &amp; correctness discussion</h2>
+
+        <h3 class="sub">Complexity, side by side</h3>
+        <div class="tbl-wrap">
+          <table class="bench">
+            <thead>
+              <tr><th>Algorithm</th><th class="mono">Time</th><th class="mono">Space</th><th>Frontier</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>BFS</td><td class="mono">O(V + E)</td><td class="mono">O(V)</td><td>FIFO queue</td></tr>
+              <tr><td>Dijkstra</td><td class="mono">O((V + E) log V)</td><td class="mono">O(V)</td><td>min-heap on g</td></tr>
+              <tr><td>A*</td><td class="mono">O((V + E) log V)</td><td class="mono">O(V)</td><td>min-heap on g + h</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="formula">On a 4-connected grid $E = \Theta(V)$, so Dijkstra and A* are $O(V \log V)$ and BFS is $O(V)$. The $\log V$ factor is the price of the heap — the cost of respecting weights.</p>
+
+        <p class="body"><b>Why A* expands fewer nodes despite the same Big-O.</b> Worst-case bounds count the whole graph, but they say nothing about the <i>constant</i> or how much of the graph is actually touched. A* never expands a node whose <span class="katex-src">$f(n)$</span> exceeds the optimal cost, so an informative heuristic shrinks the explored region to a corridor. Formally, with an admissible <i>and consistent</i> heuristic A* expands no more nodes than any other optimal algorithm using the same heuristic — and with <span class="katex-src">$h = 0$</span> it is Dijkstra, the worst case.</p>
+
+        <h3 class="sub">Correctness arguments</h3>
+        <ul class="clean">
+          <li><b>BFS shortest <i>steps</i>.</b> By induction on ring number: when BFS first dequeues a node, no shorter (fewer-edge) path to it exists, because nodes are enqueued in non-decreasing distance order. It is <i>not</i> cost-optimal once edges differ.</li>
+          <li><b>Dijkstra optimality.</b> Loop invariant: every <i>settled</i> node has its final shortest distance. When we pop node <span class="katex-src">$u$</span> with distance <span class="katex-src">$d$</span>, any alternative path must pass through an unsettled node whose tentative distance is <span class="katex-src">$\ge d$</span> (non-negative weights), so <span class="katex-src">$d$</span> cannot be beaten.</li>
+          <li><b>A* optimality.</b> If <span class="katex-src">$h$</span> is admissible (<span class="katex-src">$h(n) \le h^*(n)$</span>, the true remaining cost) then A* returns an optimal path; if <span class="katex-src">$h$</span> is also consistent, no node is re-expanded. Our scaled Manhattan distance is both, because the cheapest step is <span class="katex-src">$c_{\min}$</span> and Manhattan distance is a lower bound on the grid steps required.</li>
+        </ul>
+
+        <div class="keyidea"><b>Measuring the right thing.</b> Wall-clock time is noisy and machine-dependent (note BFS times faster than Dijkstra here purely because it has no heap). <i>Nodes expanded</i> is the machine-independent measure of search work and is what we ground the comparison on — the discipline from Session 2.</div>
+      </section>
+
+      <!-- 7. LEARNING OUTCOMES ------------------------------------------- -->
+      <section class="demo" id="outcomes">
+        <h2>6 · Mapping to learning outcomes</h2>
+        <p class="cap">How this one project touches the course's stated objectives and specific sessions.</p>
+
+        <div class="outcomes">
+          <div class="ohead">Course objectives exercised</div>
+          <ul>
+            <li><b>Big-O analysis</b> — derive and compare the time/space complexity of three search strategies, and reason about expansions vs. asymptotics.</li>
+            <li><b>Fundamental data structures</b> — implement a binary min-heap (priority queue) and use hash-keyed maps for <span class="katex-src">$O(1)$</span> bookkeeping.</li>
+            <li><b>Graph algorithms</b> — model a grid as a graph and apply BFS and Dijkstra; extend to A*.</li>
+            <li><b>Algorithm design strategies</b> — greedy frontier expansion (Dijkstra) and informed/heuristic search (A*).</li>
+            <li><b>Problem-solving in code</b> — model, implement, test, benchmark and optimise a complete solution.</li>
+          </ul>
+        </div>
+
+        <table class="map">
+          <thead>
+            <tr><th>Project component</th><th>Course session</th><th>Related demo</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Counting expansions, Big-O reasoning</td><td><a href="./course.html#program">Session 2 — Algorithm analysis</a></td><td><a href="./index.html#bigO">Big-O comparison</a></td></tr>
+            <tr><td>Integer-keyed visited/dist maps</td><td><a href="./course.html#program">Session 15 — Hashtables</a></td><td><a href="./index.html#hash">Hash table</a></td></tr>
+            <tr><td>Binary min-heap priority queue</td><td><a href="./course.html#program">Session 20 — Heaps &amp; Priority Queues</a></td><td>—</td></tr>
+            <tr><td>BFS frontier &amp; graph traversal</td><td><a href="./course.html#program">Session 17 / 21 — Traversal</a></td><td><a href="./index.html#graph">BFS / DFS</a></td></tr>
+            <tr><td>Dijkstra &amp; weighted shortest paths</td><td><a href="./course.html#program">Session 21 — Graphs (I)</a></td><td><a href="./index.html#path">Pathfinding</a></td></tr>
+            <tr><td>Why negative edges break Dijkstra</td><td><a href="./course.html#program">Session 22 — Bellman-Ford</a></td><td>—</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 8. EXTENSIONS --------------------------------------------------- -->
+      <section class="demo" id="extensions">
+        <h2>7 · Extensions</h2>
+        <p class="cap">Where to take this next — each is a natural follow-on practice problem.</p>
+        <ul class="clean">
+          <li><b>Bidirectional search.</b> Run two frontiers, one from the start and one from the goal, and stop when they meet. Roughly halves the explored radius — search of radius <span class="katex-src">$d$</span> becomes two of radius <span class="katex-src">$d/2$</span>, a large constant-factor win. Works for BFS and Dijkstra; bidirectional A* needs care to stay optimal.</li>
+          <li><b>Jump Point Search (JPS).</b> On uniform-cost grids, exploit symmetry to skip over long straight runs of cells, expanding only "jump points". Same optimal path as A*, often an order of magnitude fewer node expansions.</li>
+          <li><b>8-connectivity &amp; diagonal moves.</b> Add the four diagonal neighbours with cost <span class="katex-src">$\sqrt{2}$</span>; switch the heuristic to <i>octile</i> distance to stay admissible.</li>
+          <li><b>Weighted / suboptimal A*.</b> Use <span class="katex-src">$f = g + \varepsilon\,h$</span> with <span class="katex-src">$\varepsilon > 1$</span> to trade a bounded amount of optimality for speed — useful in real-time games.</li>
+          <li><b>Negative edges.</b> If costs could be negative (e.g. boosts), Dijkstra is unsafe; switch to <b>Bellman-Ford</b> (<span class="katex-src">$O(V \cdot E)$</span>), the Session 22 algorithm, which also detects negative cycles.</li>
+        </ul>
+      </section>
+
+      <!-- 9. REFERENCES --------------------------------------------------- -->
+      <section class="demo" id="refs">
+        <h2>8 · References</h2>
+        <div class="biblio">
+          <div class="book">
+            <span class="au">Cormen, Leiserson, Rivest &amp; Stein.</span>
+            <span class="ti"> Introduction to Algorithms (CLRS), 4th ed.</span>
+            <span class="isbn"> ISBN 9780262046305</span>
+            — Ch. 22 (elementary graph algorithms, BFS) and Ch. 24 (single-source shortest paths, Dijkstra).
+          </div>
+          <div class="book">
+            <span class="au">Hart, Nilsson &amp; Raphael (1968).</span>
+            <span class="ti"> A Formal Basis for the Heuristic Determination of Minimum Cost Paths.</span>
+            <span class="isbn"> IEEE Trans. SSC 4(2).</span>
+            — the original A* paper; admissibility and optimality.
+          </div>
+          <div class="book">
+            <span class="au">Aditya Bhargava.</span>
+            <span class="ti"> Grokking Algorithms, 2nd ed.</span>
+            <span class="isbn"> ISBN 9781633438538</span>
+            — friendly visual treatment of BFS and Dijkstra; good first intuition.
+          </div>
+          <div class="book">
+            <span class="au">Amit Patel.</span>
+            <span class="ti"> Red Blob Games — Introduction to A* (interactive).</span>
+            <span class="isbn"> redblobgames.com/pathfinding/a-star</span>
+            — the canonical interactive explainer for grid pathfinding and heuristics.
+          </div>
+        </div>
+
+        <div class="xlinks">
+          <a href="./index.html#path">Pathfinding demo</a>
+          <a href="./index.html#graph">BFS / DFS demo</a>
+          <a href="./index.html#bigO">Big-O comparison demo</a>
+          <a href="./course.html#program">Course program</a>
+          <a href="./SYLLABUS.pdf">Syllabus PDF</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>algos-lab — Andrea Montana · IE BCSAI</span>
+      <span class="more">
+        <a href="https://github.com/andreaisabelmontana/stats-lab" target="_blank">stats-lab</a>
+        <a href="https://github.com/andreaisabelmontana/calc-lab"  target="_blank">calc-lab</a>
+        <a href="https://github.com/andreaisabelmontana/sql-lab"   target="_blank">sql-lab</a>
+        <a href="https://github.com/andreaisabelmontana/algos-lab" target="_blank">source</a>
+      </span>
+    </footer>
+  </body>
+</html>
