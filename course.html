@@ -119,6 +119,58 @@
       .legend .dot2 { width: 9px; height: 9px; border-radius: 999px; border: 2px solid var(--accent); }
       .legend .dot2.e { background: var(--warn); border-color: var(--warn); }
       .legend .dot2.p { border-color: var(--ink-soft); }
+
+      /* enrichment: module overview + learning outcomes */
+      .moverview { color: var(--ink-soft); font-size: 0.85rem; margin: 0.5rem 0 0; max-width: 74ch; }
+      .outcomes { margin: 0.55rem 0 0.2rem; padding: 0.6rem 0.75rem; background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; }
+      .outcomes .ohead { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; margin-bottom: 0.35rem; }
+      .outcomes ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+      .outcomes li { position: relative; padding-left: 1rem; font-size: 0.82rem; color: var(--ink-soft); }
+      .outcomes li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+
+      /* complexity chips */
+      .cx { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem; }
+      .cx .chip {
+        font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+        color: var(--ink); background: var(--bg);
+        border: 1px solid var(--rule-h); border-radius: 4px; padding: 0.12em 0.5em;
+      }
+      .cx .chip .lk { color: var(--muted); font-weight: 500; }
+      .cx .chip .o { color: var(--accent); }
+
+      /* key idea / invariant note */
+      .keyidea {
+        margin-top: 0.5rem; padding: 0.4rem 0.6rem;
+        border-left: 2px solid var(--accent); background: var(--accent-soft);
+        border-radius: 0 5px 5px 0; font-size: 0.82rem; color: var(--ink-soft);
+      }
+      .keyidea b { color: var(--ink); font-weight: 600; }
+
+      /* annotated reading note */
+      .reads .rnote { flex-basis: 100%; font-size: 0.76rem; color: var(--muted); margin-top: 0.1rem; }
+
+      /* glossary */
+      .glossary { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 1.25rem; margin-top: 0.4rem; }
+      @media (max-width: 760px) { .glossary { grid-template-columns: 1fr; } }
+      .glossary .term { font-size: 0.84rem; color: var(--ink-soft); }
+      .glossary .term .t { color: var(--ink); font-weight: 600; }
+      .glossary .term .t code { font-family: var(--font-mono); font-size: 0.92em; color: var(--accent); font-weight: 600; }
+
+      /* annotated bibliography extras */
+      .biblio .book .note { display: block; color: var(--ink-soft); font-size: 0.8rem; margin-top: 0.15rem; }
+      .biblio .book .uses { display: block; font-family: var(--font-mono); color: var(--muted); font-size: 0.72rem; margin-top: 0.1rem; }
+
+      /* assessment detail blocks */
+      .assess { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.5rem; }
+      .assess .item { border: 1px solid var(--rule); border-radius: 6px; padding: 0.55rem 0.7rem; }
+      .assess .item .ah { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+      .assess .item .an { font-weight: 700; font-size: 0.88rem; color: var(--ink); }
+      .assess .item .aw { font-family: var(--font-mono); font-size: 0.74rem; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 0.1em 0.45em; border-radius: 4px; }
+      .assess .item p { margin: 0.3rem 0 0; font-size: 0.82rem; color: var(--ink-soft); }
+      .assess .item .deliv { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
+      .assess .item .deliv b { color: var(--ink-soft); font-weight: 600; }
+      .policy { margin-top: 0.7rem; font-size: 0.8rem; color: var(--ink-soft); }
+      .policy b { color: var(--ink); }
     </style>
   </head>
   <body>
@@ -133,6 +185,7 @@
         <a href="#objectives">objectives</a>
         <a href="#method">methodology</a>
         <a href="#program">program</a>
+        <a href="#glossary">key concepts</a>
         <a href="#biblio">bibliography</a>
         <a href="./SYLLABUS.pdf" target="_blank">syllabus PDF</a>
       </nav>
@@ -199,11 +252,29 @@
               <div class="bar-row"><span class="lbl">Continuous evaluation</span><span class="track"><span class="fill alt" style="width:30%"></span></span><span class="pct">30%</span></div>
               <div class="bar-row"><span class="lbl">Class participation</span><span class="track"><span class="fill alt" style="width:10%"></span></span><span class="pct">10%</span></div>
             </div>
-            <ul class="clean" style="margin-top:0.6rem;">
-              <li><strong>Practice deliveries</strong> — each Continuous Evaluation implements a specific algorithm, graded on correctness and performance.</li>
-              <li><strong>Capstone</strong> — teams of 3–4 implement a board game of their choice (sessions 6 → 27).</li>
-              <li><strong>Final exam</strong> — theoretical and practical questions covering sessions 1–26.</li>
-            </ul>
+            <div class="assess">
+              <div class="item">
+                <div class="ah"><span class="an">Continuous Evaluation</span><span class="aw">30%</span></div>
+                <p>Three 80-minute timed coding tests during class (sessions 14, 24, 29), each implementing a specific algorithm over the material of the preceding modules (2–3, 4–6, and 7).</p>
+                <div class="deliv"><b>Deliverable:</b> working code submitted in class. <b>Evaluation:</b> correctness (does it produce the right output?) and performance (does it meet the expected complexity?).</div>
+              </div>
+              <div class="item">
+                <div class="ah"><span class="an">Group Work — Capstone</span><span class="aw">30%</span></div>
+                <p>In teams of 3–4, implement a board game of your choice (kicked off in session 6, presented in sessions 27–28), applying the course's algorithms and data structures.</p>
+                <div class="deliv"><b>Deliverable:</b> the implemented game plus a 10–15 min presentation. <b>Evaluation:</b> choice of board game, algorithms used and why, data structures used and why, and problems encountered and how they were solved.</div>
+              </div>
+              <div class="item">
+                <div class="ah"><span class="an">Final Exam</span><span class="aw">30%</span></div>
+                <p>A comprehensive test in session 30 with theoretical and practical questions on all topics from session 1 to session 26.</p>
+                <div class="deliv"><b>Deliverable:</b> individual written exam. <b>Evaluation:</b> understanding of concepts plus ability to apply and analyse them.</div>
+              </div>
+              <div class="item">
+                <div class="ah"><span class="an">Class Participation</span><span class="aw">10%</span></div>
+                <p>Active, ongoing engagement in discussions and problem-solving throughout every session.</p>
+                <div class="deliv"><b>Deliverable:</b> sustained in-class contribution. <b>Evaluation:</b> quality and consistency of engagement.</div>
+              </div>
+            </div>
+            <p class="policy"><b>Workload &amp; pass rules:</b> 6 ECTS ≈ 150 hours total. The final grade is the weighted sum of the four components above. Attendance and conduct follow IE University's official Attendance, Code of Conduct and Ethics policies; a re-sit/re-take policy applies per university rules. <b>AI policy:</b> GenAI may be used only to research and enhance content learned in class, with explicit acknowledgement — it is prohibited for producing code in graded assignments, resolving gradable assignments, and resolving exercises/homework; misuse is academic misconduct.</p>
           </div>
         </div>
         <div class="legend">
@@ -225,24 +296,43 @@
             <span class="mtitle">Introduction</span>
             <span class="mmeta">sessions 1–2 · what algorithms are and how we measure them</span>
           </div>
+          <p class="moverview">The course opens by framing the discipline: an algorithm is a precise procedure that maps inputs to outputs, and a data structure is the way we lay that input out in memory. Before writing a single line of code we need a language to compare candidate solutions — asymptotic analysis — so that "which algorithm is best?" becomes a question we can answer quantitatively rather than by intuition.</p>
+          <div class="outcomes">
+            <div class="ohead">Learning outcomes</div>
+            <ul>
+              <li>Define an algorithm formally and recognise the classes of problems algorithms solve.</li>
+              <li>Reason about cost using asymptotic notation independently of hardware or language.</li>
+              <li>Distinguish best-, average- and worst-case behaviour, and time vs. space cost.</li>
+            </ul>
+          </div>
           <div class="timeline">
             <div class="sess">
               <div class="shead"><span class="snum">Session 1</span><span class="stitle">Introduction</span></div>
               <p>Introduction to the course; understand the methodologies and tools used throughout. Get a proper definition of what an algorithm is and the kind of problems algorithms solve.</p>
               <ul class="topics">
-                <li>Course methodology, tools and grading vehicles</li>
-                <li>Definition of an algorithm; classes of computational problems</li>
+                <li><b>Course methodology, tools and grading vehicles</b> — how theory, practice sessions and group work fit together over the 30 sessions.</li>
+                <li><b>Definition of an algorithm</b> — a finite, deterministic, well-defined procedure mapping input to output; correctness vs. efficiency as separate concerns.</li>
               </ul>
+              <div class="keyidea"><b>Key idea:</b> every algorithm we study trades off time, space and simplicity — there is rarely a single "best", only the best for a given problem and constraints.</div>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 2</span><span class="stitle">Algorithm analysis</span></div>
-              <p>Introduction to asymptotic notation as a means to describe the efficiency of an algorithm.</p>
+              <p>Introduction to asymptotic notation as a means to describe the efficiency of an algorithm, capturing the order of growth of both time and space as a function of input size <span class="mono">n</span>.</p>
               <ul class="topics">
-                <li>Asymptotic notation (Big-O)</li>
-                <li>Order of growth of time and space as a function of input size</li>
+                <li><b>Asymptotic notation</b> — Big-O (upper bound), Ω (lower bound) and Θ (tight bound); why we drop constants and lower-order terms.</li>
+                <li><b>Order of growth</b> — comparing constant, logarithmic, linear, linearithmic, quadratic and exponential cost as <span class="mono">n</span> grows.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">constant</span> <span class="o">O(1)</span></span>
+                <span class="chip"><span class="lk">log</span> <span class="o">O(log n)</span></span>
+                <span class="chip"><span class="lk">linear</span> <span class="o">O(n)</span></span>
+                <span class="chip"><span class="lk">linearithmic</span> <span class="o">O(n log n)</span></span>
+                <span class="chip"><span class="lk">quadratic</span> <span class="o">O(n²)</span></span>
+                <span class="chip"><span class="lk">exponential</span> <span class="o">O(2ⁿ)</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> asymptotic cost describes how an algorithm <i>scales</i>, not how fast it runs on one input — an <span class="mono">O(n log n)</span> method eventually beats an <span class="mono">O(n²)</span> one no matter the constants.</div>
               <a class="demolink" href="./index.html#bigO">Big-O comparison demo</a>
-              <div class="reads"><span class="rtag">Cormen — Ch. 2–3</span><span class="rtag">Grokking — Ch. 1</span></div>
+              <div class="reads"><span class="rtag">Cormen — Ch. 2–3</span><span class="rtag">Grokking — Ch. 1</span><span class="rnote">Cormen Ch. 3 formalises asymptotic notation; Grokking Ch. 1 gives the gentle Big-O intuition.</span></div>
             </div>
           </div>
         </div>
@@ -254,76 +344,120 @@
             <span class="mtitle">Searching and sorting</span>
             <span class="mmeta">sessions 3–10 · foundations, recursion &amp; divide-and-conquer</span>
           </div>
+          <p class="moverview">The largest module builds the core toolkit. We start from the two most basic linear stores — arrays and linked lists — and the elementary <span class="mono">O(n²)</span> sorts, then introduce recursion and the divide-and-conquer paradigm that unlocks <span class="mono">O(log n)</span> search and <span class="mono">O(n log n)</span> sorting. By the end, students can pick the right sort or search for a given memory and access pattern and justify it with a complexity argument.</p>
+          <div class="outcomes">
+            <div class="ohead">Learning outcomes</div>
+            <ul>
+              <li>Explain how arrays and linked lists differ in memory layout, indexing and insertion cost.</li>
+              <li>Implement and analyse insertion, bubble, quick and merge sort, and binary search.</li>
+              <li>Apply divide-and-conquer and recurrence reasoning to decompose problems.</li>
+              <li>Choose between competing sorts/searches based on stability, memory and input shape.</li>
+            </ul>
+          </div>
           <div class="timeline">
             <div class="sess">
               <div class="shead"><span class="snum">Session 3</span><span class="stitle">Arrays and Linked Lists. Searching and sorting</span></div>
-              <p>Understand how simple linear data structures store data in memory, and how the distribution of that data impacts how items can be rearranged and looked up.</p>
+              <p>Understand how simple linear data structures store data in memory, and how the distribution of that data impacts how items can be rearranged and looked up. Arrays give contiguous, index-addressable storage; linked lists scatter nodes joined by pointers.</p>
               <ul class="topics">
-                <li>Arrays vs. linked lists in memory</li>
-                <li>Effect of data layout on rearrange / lookup cost</li>
+                <li><b>Arrays</b> — contiguous memory enabling <span class="mono">O(1)</span> random access by index, but <span class="mono">O(n)</span> insertion/deletion from shifting.</li>
+                <li><b>Linked lists</b> — pointer-joined nodes giving <span class="mono">O(1)</span> insert/delete at a known position but <span class="mono">O(n)</span> access and linear search.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">array access</span> <span class="o">O(1)</span></span>
+                <span class="chip"><span class="lk">array insert</span> <span class="o">O(n)</span></span>
+                <span class="chip"><span class="lk">list access</span> <span class="o">O(n)</span></span>
+                <span class="chip"><span class="lk">list insert</span> <span class="o">O(1)</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> memory layout dictates cost — contiguity buys fast indexing, pointers buy cheap restructuring. The structure you choose encodes which operation you want to be cheap.</div>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 4</span><span class="stitle">Searching and sorting (II)</span></div>
-              <p>Foundations of sorting a collection of items; implement your first sorting algorithms.</p>
+              <p>Foundations of sorting a collection of items; implement your first sorting algorithms. Both are simple, in-place, comparison-based sorts that are quadratic in the worst case.</p>
               <ul class="topics">
-                <li>Insertion Sort</li>
-                <li>Bubble Sort</li>
+                <li><b>Insertion Sort</b> — grow a sorted prefix one element at a time; <span class="mono">O(n²)</span> worst case but <span class="mono">O(n)</span> on nearly-sorted input.</li>
+                <li><b>Bubble Sort</b> — repeatedly swap adjacent out-of-order pairs until no swaps remain; always <span class="mono">O(n²)</span> comparisons.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">insertion</span> <span class="o">O(n²)</span></span>
+                <span class="chip"><span class="lk">bubble</span> <span class="o">O(n²)</span></span>
+                <span class="chip"><span class="lk">space</span> <span class="o">O(1)</span></span>
+              </div>
+              <div class="keyidea"><b>Invariant:</b> after pass <span class="mono">k</span> of insertion sort, the first <span class="mono">k</span> elements are fully sorted among themselves — the engine of every elementary sort is a loop invariant.</div>
               <a class="demolink" href="./index.html#sort">Sorting race demo</a>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 5</span><span class="stitle">Searching and sorting (III)</span></div>
-              <p>How linked lists can be a good alternative to arrays when memory efficiency matters; when each structure is better suited.</p>
+              <p>How linked lists can be a good alternative to arrays when memory efficiency matters; when each structure is better suited. Linked lists grow without reallocation but lose locality of reference.</p>
               <ul class="topics">
-                <li>Linked lists for memory-efficient storage</li>
-                <li>Array vs. linked-list trade-offs</li>
+                <li><b>Linked lists for memory-efficient storage</b> — dynamic growth without pre-sized buffers; singly vs. doubly linked variants.</li>
+                <li><b>Array vs. linked-list trade-offs</b> — random access &amp; cache locality (array) vs. cheap splicing &amp; unbounded growth (list).</li>
               </ul>
+              <div class="keyidea"><b>Key idea:</b> prefer arrays when you index and iterate; prefer linked lists when you insert/remove at known positions and cannot bound the size in advance.</div>
             </div>
             <div class="sess practice">
               <div class="shead"><span class="snum">Session 6</span><span class="stitle">Introduction to the Group Assignment &amp; Practice Session</span><span class="tag t-practice">practice</span></div>
               <p>Kick-off of the capstone: from here until session 27, groups implement a board game of their choice, applying the algorithms and data structures learned in the course.</p>
               <ul class="topics">
-                <li>Board game coding assignment details</li>
-                <li>Rubrics and grading methodology</li>
-                <li>Set up the groups</li>
-                <li>Practice: a coding challenge mirroring the Continuous Evaluations</li>
+                <li><b>Board game coding assignment details</b> — scope, deliverables and timeline of the term-long project.</li>
+                <li><b>Rubrics and grading methodology</b> — how the project is evaluated.</li>
+                <li><b>Set up the groups</b> — teams of 3–4 members.</li>
+                <li><b>Practice</b> — a coding challenge mirroring the Continuous Evaluations to come.</li>
               </ul>
+              <div class="keyidea"><b>Key idea:</b> the board game is the thread that ties theory to practice — every data structure you meet later is a candidate tool for your own game's state, moves and AI.</div>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 7</span><span class="stitle">Recursive algorithms (I)</span></div>
-              <p>Recursion as a tool to enhance the expressiveness of an algorithm; the Divide and Conquer strategy that splits a large problem into subproblems.</p>
+              <p>Recursion as a tool to enhance the expressiveness of an algorithm; the Divide and Conquer strategy that splits a large problem into independent subproblems, solves them recursively, and combines the results.</p>
               <ul class="topics">
-                <li>Recursion fundamentals</li>
-                <li>Divide and Conquer strategy</li>
+                <li><b>Recursion fundamentals</b> — base case vs. recursive case; the call stack; how a problem refers to a smaller instance of itself.</li>
+                <li><b>Divide and Conquer</b> — <i>divide</i> into subproblems, <i>conquer</i> recursively, <i>combine</i>; cost captured by recurrences solved with the Master Theorem.</li>
               </ul>
+              <div class="keyidea"><b>Key idea:</b> a correct recursion needs a base case that always terminates and a recursive step that strictly shrinks the problem toward it.</div>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 8</span><span class="stitle">Recursive algorithms (II)</span></div>
-              <p>Binary search uses Divide and Conquer to efficiently look up elements in a sorted collection; implement it for any collection of data.</p>
+              <p>Binary search uses Divide and Conquer to efficiently look up elements in a <i>sorted</i> collection by halving the search interval each step; implement it for any collection of data.</p>
               <ul class="topics">
-                <li>Binary search — O(log n)</li>
-                <li>Generalizing binary search over any sorted collection</li>
+                <li><b>Binary search</b> — compare to the midpoint and discard half the range each step; <span class="mono">O(log n)</span> on sorted input.</li>
+                <li><b>Generalizing</b> — the same halving idea applies to any monotonic predicate, not just equality lookup.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">binary search</span> <span class="o">O(log n)</span></span>
+                <span class="chip"><span class="lk">requires</span> <span class="o">sorted input</span></span>
+              </div>
+              <div class="keyidea"><b>Invariant:</b> the target, if present, always lies within the current <span class="mono">[lo, hi]</span> window — every iteration preserves this while halving the window.</div>
               <a class="demolink" href="./index.html#bin">Binary search demo</a>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 9</span><span class="stitle">Recursive Sorting (I)</span></div>
-              <p>Dives deeper into Quicksort — another example of Divide and Conquer, used to sort a collection of linear data.</p>
+              <p>Dives deeper into Quicksort — another example of Divide and Conquer, used to sort a collection of linear data by partitioning around a pivot and recursing on each side.</p>
               <ul class="topics">
-                <li>Quicksort: partitioning and pivots</li>
+                <li><b>Quicksort</b> — choose a pivot, partition smaller/larger elements around it, recurse; in-place with small constants.</li>
+                <li><b>Pivots</b> — average <span class="mono">O(n log n)</span>, but a poor pivot degrades to <span class="mono">O(n²)</span>; randomisation mitigates this.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">avg</span> <span class="o">O(n log n)</span></span>
+                <span class="chip"><span class="lk">worst</span> <span class="o">O(n²)</span></span>
+                <span class="chip"><span class="lk">space</span> <span class="o">O(log n)</span></span>
+              </div>
+              <div class="keyidea"><b>Invariant:</b> after partitioning, the pivot sits in its final sorted position — everything left is ≤ it, everything right is ≥ it.</div>
               <a class="demolink" href="./index.html#sort">Sorting race demo</a>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 10</span><span class="stitle">Recursive sorting (II)</span></div>
-              <p>Merge Sort as a good alternative to Quicksort for Divide-and-Conquer sorting; understand the differences and when to use each.</p>
+              <p>Merge Sort as a good alternative to Quicksort for Divide-and-Conquer sorting; recursively split the list in half, sort each half, and merge the two sorted halves. Understand the differences and when to use each.</p>
               <ul class="topics">
-                <li>Merge Sort</li>
-                <li>Merge Sort vs. Quicksort trade-offs</li>
+                <li><b>Merge Sort</b> — guaranteed <span class="mono">O(n log n)</span> and <i>stable</i>, but needs <span class="mono">O(n)</span> auxiliary space.</li>
+                <li><b>Merge Sort vs. Quicksort</b> — merge sort for stability/guaranteed bounds &amp; linked lists; quicksort for in-place speed on arrays.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">merge sort</span> <span class="o">O(n log n)</span></span>
+                <span class="chip"><span class="lk">stable</span> <span class="o">yes</span></span>
+                <span class="chip"><span class="lk">space</span> <span class="o">O(n)</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> merging two already-sorted lists is linear — that single fact is what turns recursive halving into an <span class="mono">O(n log n)</span> sort.</div>
               <a class="demolink" href="./index.html#sort">Sorting race demo</a>
-              <div class="reads"><span class="rtag">Cormen — Ch. 2, 7, 8</span><span class="rtag">Grokking — Ch. 3–4</span></div>
+              <div class="reads"><span class="rtag">Cormen — Ch. 2, 7, 8</span><span class="rtag">Grokking — Ch. 3–4</span><span class="rnote">Cormen Ch. 7 covers quicksort &amp; randomisation, Ch. 8 the sorting lower bound; Grokking Ch. 4 motivates divide-and-conquer.</span></div>
             </div>
           </div>
         </div>
@@ -335,35 +469,53 @@
             <span class="mtitle">Linear data structures</span>
             <span class="mmeta">sessions 11–14 · stacks, queues, multidimensional arrays</span>
           </div>
+          <p class="moverview">Having mastered raw arrays and lists, this module layers <i>abstract data types</i> on top of them. Stacks and queues constrain access order to make certain problems trivial, and multidimensional arrays generalise indexing to grids and matrices. The module closes the first assessable block with a timed Continuous Evaluation over modules 2–3.</p>
+          <div class="outcomes">
+            <div class="ohead">Learning outcomes</div>
+            <ul>
+              <li>Implement stacks and queues over arrays and linked lists with <span class="mono">O(1)</span> core operations.</li>
+              <li>Select LIFO vs. FIFO discipline to match a problem's ordering requirements.</li>
+              <li>Reason about row-major memory layout and access cost for 2-D and n-D arrays.</li>
+              <li>Solve combined linear-structure problems under time pressure.</li>
+            </ul>
+          </div>
           <div class="timeline">
             <div class="sess">
               <div class="shead"><span class="snum">Session 11</span><span class="stitle">Stacks and Queues</span></div>
-              <p>Linear structures built on top of arrays and linked lists that impose ordering restrictions, useful when insertion order affects extraction order.</p>
+              <p>Linear structures built on top of arrays and linked lists that impose ordering restrictions, useful when insertion order affects extraction order. They expose a deliberately narrow interface so the discipline is guaranteed.</p>
               <ul class="topics">
-                <li>Stack (LIFO) and Queue (FIFO) interfaces</li>
-                <li>Efficient use and when each is appropriate</li>
+                <li><b>Stack (LIFO)</b> — last-in, first-out; <span class="mono">push</span>/<span class="mono">pop</span>/<span class="mono">peek</span> in <span class="mono">O(1)</span>. Drives recursion, undo, and expression evaluation.</li>
+                <li><b>Queue (FIFO)</b> — first-in, first-out; <span class="mono">enqueue</span>/<span class="mono">dequeue</span> in <span class="mono">O(1)</span>. Drives scheduling and breadth-first traversal.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">push / pop</span> <span class="o">O(1)</span></span>
+                <span class="chip"><span class="lk">enqueue / dequeue</span> <span class="o">O(1)</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> restricting <i>where</i> you may add and remove is a feature — it makes the structure's behaviour predictable and the matching algorithm simple.</div>
             </div>
             <div class="sess practice">
               <div class="shead"><span class="snum">Session 12</span><span class="stitle">Practice session: Linear Data Structures</span><span class="tag t-practice">practice</span></div>
               <p>Solve more complex problems combining the techniques and data structures learned so far, with instructor guidance and student-proposed problems.</p>
               <ul class="topics">
-                <li>Combined linear-structure problems</li>
+                <li><b>Combined linear-structure problems</b> — e.g. balanced-bracket checking, sliding windows, and using a stack/queue inside a larger algorithm.</li>
               </ul>
+              <div class="keyidea"><b>Key idea:</b> real problems rarely name the structure they need — recognising "this is a stack problem" is half the solution.</div>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 13</span><span class="stitle">Multidimensional Arrays</span></div>
-              <p>Arrays with more than one dimension; how they are stored in memory and the efficiency of typical read/update operations.</p>
+              <p>Arrays with more than one dimension; how they are stored in memory (typically row-major, flattened into one contiguous block) and the efficiency of typical read/update operations.</p>
               <ul class="topics">
-                <li>Memory layout of multidimensional arrays</li>
-                <li>Read/update efficiency and typical use cases</li>
+                <li><b>Memory layout</b> — multidimensional indices mapped to one linear offset; row-major vs. column-major and its effect on cache behaviour.</li>
+                <li><b>Read/update efficiency</b> — element access stays <span class="mono">O(1)</span>; iteration order matters for performance. Use cases: matrices, grids, images, game boards.</li>
               </ul>
+              <div class="keyidea"><b>Key idea:</b> a 2-D array is a 1-D array in disguise — iterating in storage order keeps memory accesses contiguous and fast.</div>
             </div>
             <div class="sess eval">
               <div class="shead"><span class="snum">Session 14</span><span class="stitle">Practice Test — Continuous Evaluation (I)</span><span class="tag t-eval">evaluation</span></div>
-              <p>A coding task to complete in 80 minutes, covering all material from modules 2 and 3.</p>
+              <p>A coding task to complete in 80 minutes, covering all material from modules 2 and 3 (sorting, searching, recursion, arrays, lists, stacks, queues).</p>
               <ul class="topics">
-                <li>Graded on correctness and performance</li>
+                <li><b>Solved individually during class time.</b></li>
+                <li><b>Graded on correctness and performance</b> — both that it works and that it meets the expected complexity.</li>
               </ul>
             </div>
           </div>
@@ -376,14 +528,29 @@
             <span class="mtitle">Unordered data structures</span>
             <span class="mmeta">session 15 · hashing</span>
           </div>
+          <p class="moverview">A short but pivotal module: it leaves ordered, position-based structures behind and introduces <i>hashing</i>, which trades ordering for near-constant-time lookup. The hash table underpins sets, dictionaries and caches and is one of the most-used structures in practice.</p>
+          <div class="outcomes">
+            <div class="ohead">Learning outcomes</div>
+            <ul>
+              <li>Explain what makes a good hash function (uniform, fast, deterministic).</li>
+              <li>Describe collision-resolution strategies (chaining, open addressing) and the role of load factor.</li>
+              <li>Reason about average <span class="mono">O(1)</span> vs. worst-case <span class="mono">O(n)</span> hash-table operations.</li>
+            </ul>
+          </div>
           <div class="timeline">
             <div class="sess">
               <div class="shead"><span class="snum">Session 15</span><span class="stitle">Hashtables</span></div>
-              <p>Entering non-linear data structures: hashtables enable fast item retrieval based on hash functions.</p>
+              <p>Entering non-linear data structures: hashtables enable fast item retrieval based on hash functions, which map a key to a bucket index so insert, lookup and delete avoid scanning the whole collection.</p>
               <ul class="topics">
-                <li>Hash functions</li>
-                <li>Arranging items in a collection by hash; collisions</li>
+                <li><b>Hash functions</b> — deterministic maps from keys to indices that should spread keys uniformly across buckets.</li>
+                <li><b>Collisions</b> — distinct keys landing in the same bucket, resolved by chaining (lists per bucket) or open addressing (probing); load factor governs performance.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">lookup avg</span> <span class="o">O(1)</span></span>
+                <span class="chip"><span class="lk">lookup worst</span> <span class="o">O(n)</span></span>
+                <span class="chip"><span class="lk">space</span> <span class="o">O(n)</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> a hash table buys <span class="mono">O(1)</span> average access by giving up order — you can find a key fast, but you cannot ask for "the next largest".</div>
               <a class="demolink" href="./index.html#hash">Hash table demo</a>
             </div>
           </div>
@@ -396,44 +563,78 @@
             <span class="mtitle">Tree-like data structures</span>
             <span class="mmeta">sessions 16–20 · trees, traversal, BSTs, heaps</span>
           </div>
+          <p class="moverview">Trees are the first hierarchical (non-linear) structures: a root branching into children, with no cycles. The module covers how to lay a tree out, the two canonical ways to visit every node (BFS and DFS), the ordered Binary Search Tree, and the heap — a tree tuned for always retrieving the highest-priority element. These structures power search, scheduling and the pathfinding to come in module 6.</p>
+          <div class="outcomes">
+            <div class="ohead">Learning outcomes</div>
+            <ul>
+              <li>Describe tree terminology (root, parent, child, leaf, depth, height).</li>
+              <li>Implement breadth-first and depth-first traversal and choose between them.</li>
+              <li>Build a Binary Search Tree and reason about why balance determines its cost.</li>
+              <li>Use a heap / priority queue to retrieve extreme elements efficiently.</li>
+            </ul>
+          </div>
           <div class="timeline">
             <div class="sess">
               <div class="shead"><span class="snum">Session 16</span><span class="stitle">Tree Data Structures (I)</span></div>
-              <p>Trees as graph-like structures: how a tree is arranged and how an algorithm visits all its nodes.</p>
+              <p>Trees as graph-like structures (a connected, acyclic graph with a root): how a tree is arranged and how an algorithm visits all its nodes recursively.</p>
               <ul class="topics">
-                <li>Tree anatomy and arrangement</li>
-                <li>Traversal — visiting every node</li>
+                <li><b>Tree anatomy</b> — root, parent/child, leaves, subtrees, depth and height; the recursive definition of a tree.</li>
+                <li><b>Traversal</b> — visiting every node exactly once in <span class="mono">O(n)</span>; pre-/in-/post-order variants of depth-first walking.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">traversal</span> <span class="o">O(n)</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> a tree is defined recursively — each child is itself the root of a subtree — so most tree algorithms are naturally recursive.</div>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 17</span><span class="stitle">Tree Data Structures (II)</span></div>
-              <p>Breadth First and Depth First, the most common traversal techniques; implement both and know when to use each.</p>
+              <p>Breadth First and Depth First, the most common traversal techniques; implement both and know when to use each. BFS explores level by level; DFS dives down one branch before backtracking.</p>
               <ul class="topics">
-                <li>Breadth First Search (BFS)</li>
-                <li>Depth First Search (DFS)</li>
+                <li><b>Breadth First Search (BFS)</b> — level-order using a <i>queue</i>; finds the shallowest/closest node first.</li>
+                <li><b>Depth First Search (DFS)</b> — explore deep first using a <i>stack</i> or recursion; natural for full enumeration and detecting structure.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">BFS / DFS</span> <span class="o">O(n)</span></span>
+                <span class="chip"><span class="lk">BFS uses</span> <span class="o">queue</span></span>
+                <span class="chip"><span class="lk">DFS uses</span> <span class="o">stack</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> BFS and DFS differ only in the structure that holds the frontier — swap a queue for a stack and the same loop changes its exploration order.</div>
               <a class="demolink" href="./index.html#graph">BFS / DFS traversal demo</a>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 18</span><span class="stitle">Tree Data Structures (III)</span></div>
-              <p>A deeper look at a commonly used tree: the Binary Search Tree.</p>
+              <p>A deeper look at a commonly used tree: the Binary Search Tree, which keeps elements ordered so search mirrors binary search.</p>
               <ul class="topics">
-                <li>Binary Search Tree (BST) — insert, search, ordering invariant</li>
+                <li><b>BST ordering invariant</b> — every key in the left subtree &lt; node &lt; every key in the right subtree.</li>
+                <li><b>Operations</b> — search, insert and delete in <span class="mono">O(h)</span> where <span class="mono">h</span> is height: <span class="mono">O(log n)</span> if balanced, <span class="mono">O(n)</span> if degenerate.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">balanced</span> <span class="o">O(log n)</span></span>
+                <span class="chip"><span class="lk">degenerate</span> <span class="o">O(n)</span></span>
+              </div>
+              <div class="keyidea"><b>Invariant:</b> an in-order traversal of a BST yields its keys in sorted order — that single property is what makes search logarithmic when the tree stays balanced.</div>
             </div>
             <div class="sess practice">
               <div class="shead"><span class="snum">Session 19</span><span class="stitle">Practice Session: Tree Data Structures</span><span class="tag t-practice">practice</span></div>
               <p>Entirely dedicated to problems where trees are the right data structure, with instructor guidance and student-proposed problems.</p>
               <ul class="topics">
-                <li>Tree-based problem solving</li>
+                <li><b>Tree-based problem solving</b> — traversal, height/balance checks, and recursive divide-and-conquer over tree shapes.</li>
               </ul>
+              <div class="keyidea"><b>Key idea:</b> when a problem has nested or hierarchical structure, modelling it as a tree often turns a hard loop into a clean recursion.</div>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 20</span><span class="stitle">Heaps and Priority Queues</span></div>
-              <p>Tree-like structures where items are arranged by priority or weight; how they work and when to use them.</p>
+              <p>Tree-like structures where items are arranged by priority or weight; a (binary) heap keeps the highest- or lowest-priority element at the root for instant access. How they work and when to use them.</p>
               <ul class="topics">
-                <li>Heap property; priority queues</li>
+                <li><b>Heap property</b> — every parent dominates its children (max-heap or min-heap); stored compactly in an array.</li>
+                <li><b>Priority queue</b> — insert and extract-min/max in <span class="mono">O(log n)</span>, peek in <span class="mono">O(1)</span>; the engine behind Dijkstra and scheduling.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">insert</span> <span class="o">O(log n)</span></span>
+                <span class="chip"><span class="lk">extract</span> <span class="o">O(log n)</span></span>
+                <span class="chip"><span class="lk">peek</span> <span class="o">O(1)</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> a heap doesn't fully sort — it keeps <i>just enough</i> order to surface the next-most-important element cheaply, which is all a priority queue needs.</div>
             </div>
           </div>
         </div>
@@ -445,39 +646,63 @@
             <span class="mtitle">Graphs</span>
             <span class="mmeta">sessions 21–24 · traversal, shortest paths, cycles, topological sort</span>
           </div>
+          <p class="moverview">Graphs generalise trees by allowing any node to relate to any other, with edges that may be directed and/or weighted — the natural model for maps, networks, dependencies and game states. The module covers traversal, the two flagship shortest-path algorithms (Dijkstra and Bellman-Ford), and DFS-based techniques for cycle detection and ordering dependencies. It closes with the second Continuous Evaluation spanning modules 4–6.</p>
+          <div class="outcomes">
+            <div class="ohead">Learning outcomes</div>
+            <ul>
+              <li>Represent graphs as adjacency lists/matrices and choose by density.</li>
+              <li>Apply BFS/DFS to connectivity, reachability and cycle detection.</li>
+              <li>Compute shortest paths with Dijkstra and know when Bellman-Ford is required.</li>
+              <li>Produce a topological order of a Directed Acyclic Graph.</li>
+            </ul>
+          </div>
           <div class="timeline">
             <div class="sess">
               <div class="shead"><span class="snum">Session 21</span><span class="stitle">Graphs (I)</span></div>
-              <p>Graphs hold many (possibly directional and/or weighted) relations among elements. What a graph is, what problems it suits, how to traverse it and find shortest paths.</p>
+              <p>Graphs hold many (possibly directional and/or weighted) relations among elements. What a graph is, what problems it suits, how to represent and traverse it, and how to find the shortest path between two nodes.</p>
               <ul class="topics">
-                <li>Graph definitions; directed / weighted edges</li>
-                <li>Graph traversal and shortest path between two nodes</li>
-                <li>Dijkstra's Shortest Path algorithm</li>
+                <li><b>Graph definitions</b> — vertices and edges; directed vs. undirected, weighted vs. unweighted; adjacency list (sparse) vs. matrix (dense).</li>
+                <li><b>Traversal &amp; shortest path</b> — BFS gives the fewest-edges path on unweighted graphs.</li>
+                <li><b>Dijkstra's algorithm</b> — greedy single-source shortest path on non-negative weights using a priority queue.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">Dijkstra</span> <span class="o">O((V+E) log V)</span></span>
+                <span class="chip"><span class="lk">BFS</span> <span class="o">O(V+E)</span></span>
+                <span class="chip"><span class="lk">needs</span> <span class="o">weights ≥ 0</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> Dijkstra repeatedly settles the closest unvisited node — once a node is settled its shortest distance is final, which is exactly why negative edges break it.</div>
               <a class="demolink" href="./index.html#path">Pathfinding demo (BFS / Dijkstra / A*)</a>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 22</span><span class="stitle">Graphs (II) — Bellman-Ford, cycles &amp; topological sort</span></div>
-              <p>Dijkstra's limitations and how algorithms like Bellman-Ford come to the rescue.</p>
+              <p>Dijkstra's limitations (it fails with negative-weight edges) and how algorithms like Bellman-Ford come to the rescue by relaxing every edge repeatedly. Plus two DFS-based tools for directed graphs.</p>
               <ul class="topics">
-                <li>Bellman-Ford's algorithm</li>
-                <li>Cycle detection using Depth First</li>
-                <li>Topological sorting of Directed Acyclic Graphs</li>
+                <li><b>Bellman-Ford</b> — relax all edges <span class="mono">V−1</span> times; handles negative weights and detects negative cycles.</li>
+                <li><b>Cycle detection</b> — using Depth First search and node colouring / recursion-stack tracking.</li>
+                <li><b>Topological sort</b> — a linear ordering of a DAG so every edge points forward; the basis of dependency resolution and scheduling.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">Bellman-Ford</span> <span class="o">O(V·E)</span></span>
+                <span class="chip"><span class="lk">topo sort</span> <span class="o">O(V+E)</span></span>
+                <span class="chip"><span class="lk">handles</span> <span class="o">negative edges</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> Bellman-Ford trades speed for generality — it is slower than Dijkstra but works where Dijkstra cannot, and a still-improving edge after <span class="mono">V−1</span> passes proves a negative cycle.</div>
               <a class="demolink" href="./index.html#path">Pathfinding demo</a>
             </div>
             <div class="sess practice">
               <div class="shead"><span class="snum">Session 23</span><span class="stitle">Practice Session: Graphs</span><span class="tag t-practice">practice</span></div>
               <p>Entirely dedicated to problems where graphs are the right data structure, with instructor guidance and student-proposed problems.</p>
               <ul class="topics">
-                <li>Graph-based problem solving</li>
+                <li><b>Graph-based problem solving</b> — modelling a problem as nodes and edges, then picking the right traversal or shortest-path tool.</li>
               </ul>
+              <div class="keyidea"><b>Key idea:</b> the hard part of graph problems is usually the modelling — once "states" become nodes and "moves" become edges, a standard algorithm finishes the job.</div>
             </div>
             <div class="sess eval">
               <div class="shead"><span class="snum">Session 24</span><span class="stitle">Practice Test — Continuous Evaluation: Graph-like Data Structures</span><span class="tag t-eval">evaluation</span></div>
-              <p>A coding task to complete in 80 minutes, covering all material from modules 4, 5 and 6.</p>
+              <p>A coding task to complete in 80 minutes, covering all material from modules 4, 5 and 6 (hashing, trees, heaps, graphs).</p>
               <ul class="topics">
-                <li>Graded on correctness and performance</li>
+                <li><b>Solved individually during class time.</b></li>
+                <li><b>Graded on correctness and performance.</b></li>
               </ul>
             </div>
           </div>
@@ -490,80 +715,145 @@
             <span class="mtitle">Dynamic Programming and Greedy Algorithms</span>
             <span class="mmeta">sessions 25–30 · strategies, presentations &amp; final exam</span>
           </div>
+          <p class="moverview">The final module steps up from data structures to high-level <i>algorithm design strategies</i> for hard optimisation problems: greedy methods that commit to a locally best choice, and dynamic programming that systematically reuses subproblem answers. It also introduces the idea of intractability (NP-completeness) and approximation. The term ends with group presentations, the last Continuous Evaluation, and the comprehensive final exam.</p>
+          <div class="outcomes">
+            <div class="ohead">Learning outcomes</div>
+            <ul>
+              <li>Recognise when a greedy choice is provably optimal versus only approximate.</li>
+              <li>Identify NP-complete problems and the role of approximation algorithms.</li>
+              <li>Spot overlapping subproblems and optimal substructure and design a DP solution.</li>
+              <li>Implement DP both top-down (memoization) and bottom-up (tabulation).</li>
+            </ul>
+          </div>
           <div class="timeline">
             <div class="sess">
               <div class="shead"><span class="snum">Session 25</span><span class="stitle">Greedy Algorithms</span></div>
-              <p>Tackling the "impossible" — problems with no fast algorithmic solution (NP-complete). How to identify them and use approximation algorithms to find approximate solutions quickly.</p>
+              <p>Tackling the "impossible" — problems with no known fast (polynomial) solution, the NP-complete class. Greedy algorithms make the locally optimal choice at each step; for hard problems, approximation algorithms trade exactness for speed.</p>
               <ul class="topics">
-                <li>NP-complete problems</li>
-                <li>Greedy &amp; approximation algorithms</li>
+                <li><b>Greedy strategy</b> — commit to the best immediate choice; optimal only when the problem has the greedy-choice property and optimal substructure.</li>
+                <li><b>NP-complete problems</b> — no known polynomial algorithm; verifying a solution is easy but finding one seems exponential.</li>
+                <li><b>Approximation algorithms</b> — fast methods that return a provably near-optimal answer.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">greedy step</span> <span class="o">often O(n log n)</span></span>
+                <span class="chip"><span class="lk">NP-complete brute force</span> <span class="o">O(2ⁿ)</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> greedy is fast and simple but only correct when a local optimum is guaranteed to be part of a global optimum — otherwise it gives an approximation, not the answer.</div>
               <a class="demolink" href="./index.html#nq">Backtracking — N-Queens demo</a>
             </div>
             <div class="sess">
               <div class="shead"><span class="snum">Session 26</span><span class="stitle">Dynamic Programming</span></div>
-              <p>Solving complex problems by breaking them into simpler subproblems, solving each once, and storing the results for reuse.</p>
+              <p>Solving complex problems by breaking them into simpler subproblems, solving each <i>once</i>, and storing the results for reuse — turning exponential recomputation into polynomial work.</p>
               <ul class="topics">
-                <li>Overlapping subproblems — same subproblems solved repeatedly</li>
-                <li>Optimal substructure — optimal solution built from optimal subsolutions</li>
+                <li><b>Overlapping subproblems</b> — the same subproblems recur, so caching (memoization) avoids recomputation.</li>
+                <li><b>Optimal substructure</b> — an optimal solution is composed of optimal solutions to its subproblems.</li>
+                <li><b>Top-down vs. bottom-up</b> — recursion with a memo table vs. iterative tabulation; e.g. Fibonacci <span class="mono">O(2ⁿ)</span> → <span class="mono">O(n)</span>, 0/1 knapsack in <span class="mono">O(nW)</span>.</li>
               </ul>
+              <div class="cx">
+                <span class="chip"><span class="lk">Fibonacci DP</span> <span class="o">O(n)</span></span>
+                <span class="chip"><span class="lk">0/1 knapsack</span> <span class="o">O(nW)</span></span>
+              </div>
+              <div class="keyidea"><b>Key idea:</b> DP is "recursion plus memory" — if a brute-force recursion keeps re-solving the same subproblems, caching their answers collapses the cost dramatically.</div>
               <a class="demolink" href="./index.html#fib">DP — Fibonacci memoization demo</a>
               <a class="demolink" href="./index.html#ks">0/1 Knapsack DP table demo</a>
             </div>
             <div class="sess practice">
               <div class="shead"><span class="snum">Session 27</span><span class="stitle">Groupwork Presentations (I)</span><span class="tag t-practice">practice</span></div>
-              <p>The first half of the groups give 10–15 minute presentations of their board-game results.</p>
+              <p>The first half of the groups give 10–15 minute presentations of their board-game results, defending their engineering choices to the class.</p>
               <ul class="topics">
-                <li>Why they chose the board game</li>
-                <li>What algorithms they used and why</li>
-                <li>What data structures they used and why</li>
-                <li>What problems they hit and how they solved them</li>
+                <li><b>Why they chose the board game</b></li>
+                <li><b>What algorithms they used and why</b></li>
+                <li><b>What data structures they used and why</b></li>
+                <li><b>What problems they hit and how they solved them</b></li>
               </ul>
+              <div class="keyidea"><b>Key idea:</b> being able to justify <i>why</i> a structure or algorithm fits a problem is the real learning outcome — the same skill graded in the final exam.</div>
             </div>
             <div class="sess practice">
               <div class="shead"><span class="snum">Session 28</span><span class="stitle">Groupwork Presentations (II)</span><span class="tag t-practice">practice</span></div>
-              <p>The remaining half of the groups give their 10–15 minute presentations on the same points.</p>
+              <p>The remaining half of the groups give their 10–15 minute presentations on the same four points (board-game choice, algorithms, data structures, and problems solved).</p>
               <ul class="topics">
-                <li>Board-game choice, algorithms, data structures and problems solved</li>
+                <li><b>Board-game choice, algorithms, data structures and problems solved</b></li>
               </ul>
             </div>
             <div class="sess eval">
               <div class="shead"><span class="snum">Session 29</span><span class="stitle">Practice Test — Continuous Evaluation: Greedy &amp; Dynamic Programming</span><span class="tag t-eval">evaluation</span></div>
-              <p>A coding task to complete in 80 minutes, covering all material from module 7.</p>
+              <p>A coding task to complete in 80 minutes, covering all material from module 7 (greedy and dynamic programming).</p>
               <ul class="topics">
-                <li>Graded on correctness and performance</li>
+                <li><b>Solved individually during class time.</b></li>
+                <li><b>Graded on correctness and performance.</b></li>
               </ul>
             </div>
             <div class="sess eval">
               <div class="shead"><span class="snum">Session 30</span><span class="stitle">Final Exam</span><span class="tag t-eval">evaluation</span></div>
-              <p>A test exercising understanding of all topics covered from session 1 to session 26 — theoretical and practical.</p>
+              <p>A test exercising understanding of all topics covered from session 1 to session 26 — both theoretical and practical questions.</p>
               <ul class="topics">
-                <li>Comprehensive theory + practice</li>
+                <li><b>Comprehensive theory + practice</b> across all seven modules.</li>
+                <li>Covers sessions 1–26 (presentations and CE sessions are assessed separately).</li>
               </ul>
             </div>
           </div>
         </div>
       </section>
 
+      <!-- KEY CONCEPTS / GLOSSARY --------------------------------------- -->
+      <section class="demo" id="glossary">
+        <h2>Key concepts</h2>
+        <p class="cap">A quick reference to the vocabulary used throughout the program — complexity classes, structures and strategies.</p>
+        <div class="glossary">
+          <div class="term"><span class="t">Algorithm</span> — a finite, well-defined procedure that maps an input to an output; correctness and efficiency are judged separately.</div>
+          <div class="term"><span class="t">Data structure</span> — a way of organising data in memory to make particular operations efficient.</div>
+          <div class="term"><span class="t">Asymptotic notation</span> — describes how cost grows with input size, ignoring constants: Big-O (upper), Ω (lower), Θ (tight).</div>
+          <div class="term"><span class="t">Constant time — <code>O(1)</code></span> — cost independent of input size (e.g. array index, hash lookup average).</div>
+          <div class="term"><span class="t">Logarithmic — <code>O(log n)</code></span> — cost grows by a constant each time <span class="mono">n</span> doubles (e.g. binary search).</div>
+          <div class="term"><span class="t">Linear — <code>O(n)</code></span> — cost proportional to input size (e.g. a single scan).</div>
+          <div class="term"><span class="t">Linearithmic — <code>O(n log n)</code></span> — the bound of efficient comparison sorts (merge/quick sort).</div>
+          <div class="term"><span class="t">Quadratic — <code>O(n²)</code></span> — cost grows with the square of <span class="mono">n</span> (e.g. bubble/insertion sort).</div>
+          <div class="term"><span class="t">Exponential — <code>O(2ⁿ)</code></span> — cost doubles with each added element; brute-force search of hard problems.</div>
+          <div class="term"><span class="t">Divide and conquer</span> — split a problem into subproblems, solve recursively, and combine (merge sort, quicksort, binary search).</div>
+          <div class="term"><span class="t">Recursion</span> — a procedure defined in terms of smaller instances of itself, with a base case that guarantees termination.</div>
+          <div class="term"><span class="t">Stable sort</span> — preserves the relative order of equal keys (merge sort is stable; quicksort generally is not).</div>
+          <div class="term"><span class="t">Stack (LIFO)</span> — last-in, first-out access; powers recursion, undo and DFS.</div>
+          <div class="term"><span class="t">Queue (FIFO)</span> — first-in, first-out access; powers scheduling and BFS.</div>
+          <div class="term"><span class="t">Hash table</span> — key-to-bucket mapping giving average <span class="mono">O(1)</span> lookup; collisions resolved by chaining or probing.</div>
+          <div class="term"><span class="t">Binary Search Tree</span> — ordered tree where left &lt; node &lt; right; operations are <span class="mono">O(h)</span> in the height.</div>
+          <div class="term"><span class="t">Heap / priority queue</span> — tree keeping the highest-priority element at the root; insert/extract in <span class="mono">O(log n)</span>.</div>
+          <div class="term"><span class="t">Graph</span> — vertices joined by edges that may be directed and/or weighted; models networks and relations.</div>
+          <div class="term"><span class="t">BFS / DFS</span> — breadth-first (level order, queue) and depth-first (deep first, stack) graph/tree traversals.</div>
+          <div class="term"><span class="t">Dijkstra's algorithm</span> — single-source shortest paths on non-negative-weight graphs using a priority queue.</div>
+          <div class="term"><span class="t">Bellman-Ford</span> — shortest paths that tolerate negative weights and detect negative cycles, at higher cost.</div>
+          <div class="term"><span class="t">Topological sort</span> — a linear ordering of a DAG so every edge points forward; used for dependency resolution.</div>
+          <div class="term"><span class="t">Greedy algorithm</span> — makes the locally optimal choice at each step; optimal only with the greedy-choice property.</div>
+          <div class="term"><span class="t">Dynamic programming</span> — solving problems with overlapping subproblems and optimal substructure by caching subresults.</div>
+          <div class="term"><span class="t">NP-complete</span> — problems with no known polynomial algorithm but whose solutions are quickly verifiable.</div>
+          <div class="term"><span class="t">Loop invariant</span> — a condition true before and after every loop iteration; the standard tool for proving correctness.</div>
+        </div>
+      </section>
+
       <!-- BIBLIOGRAPHY -------------------------------------------------- -->
       <section class="demo" id="biblio">
         <h2>Bibliography</h2>
-        <p class="cap">Recommended reading.</p>
+        <p class="cap">Recommended reading, annotated with how each text supports the course.</p>
         <div class="biblio">
           <div class="book">
             <span class="au">Cormen, Leiserson, Rivest &amp; Stein.</span>
             <span class="ti"> Introduction to Algorithms.</span>
             <span class="isbn"> ISBN 9780262033848 (Digital)</span>
+            <span class="note">The rigorous, comprehensive reference ("CLRS") with formal proofs and complexity analysis — the spine of the course.</span>
+            <span class="uses">Use throughout · esp. sessions 2 (analysis), 7–10 (recursion &amp; sorting), 16–24 (trees &amp; graphs), 25–26 (greedy &amp; DP).</span>
           </div>
           <div class="book">
             <span class="au">Aditya Y. Bhargava.</span>
             <span class="ti"> Grokking Algorithms.</span>
             <span class="isbn"> ISBN 9781617292230 (Digital)</span>
+            <span class="note">A friendly, illustrated introduction — ideal for first intuition before the formal treatment in CLRS.</span>
+            <span class="uses">Use for sessions 2 (Big-O), 4–10 (sorting/search &amp; divide-and-conquer), 21–22 (graphs), 26 (DP).</span>
           </div>
           <div class="book">
             <span class="au">Donald Knuth.</span>
             <span class="ti"> The Art of Computer Programming.</span>
             <span class="isbn"> ISBN 9780201896831 (Digital)</span>
+            <span class="note">The classic deep-dive reference for advanced study and the mathematical foundations of algorithms.</span>
+            <span class="uses">Optional depth · sorting &amp; searching internals (sessions 4–10) and analysis foundations.</span>
           </div>
         </div>
       </section>
